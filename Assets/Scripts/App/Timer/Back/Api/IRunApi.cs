@@ -9,9 +9,9 @@ namespace App.Timer.Back.Api
     {
         UniTask<SessionStartResponse> StartSession(CancellationToken cancellationToken = default);
         UniTask<SessionFinishedResponse> FinishSession(CancellationToken cancellationToken = default);
-        UniTask CancelSession(CancellationToken cancellationToken = default);
+        UniTask<CancelSessionResponse> CancelSession(CancellationToken cancellationToken = default);
         UniTask<RunFinishResponse> FinishRun(RunFinishRequest request, CancellationToken cancellationToken = default);
-        UniTask CancelRun(CancellationToken cancellationToken = default);
+        UniTask<CancelRunResponse> CancelRun(CancellationToken cancellationToken = default);
         UniTask<CurrentRunResponse> GetCurrentRun(CancellationToken cancellationToken = default);
         UniTask<List<RunHistoryResponse>> GetRunHistory(RunHistoryRequest request, CancellationToken cancellationToken = default);
     }

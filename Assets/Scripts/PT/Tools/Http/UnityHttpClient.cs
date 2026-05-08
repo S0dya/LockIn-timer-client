@@ -100,7 +100,8 @@ namespace PT.Tools.Http
 
             HandleErrors(request, text);
 
-            if (string.IsNullOrEmpty(text)) return default;
+            if (string.IsNullOrEmpty(text))
+                throw new ApiException("Empty response", request.responseCode);
 
             try
             {

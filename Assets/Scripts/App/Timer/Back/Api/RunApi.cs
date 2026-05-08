@@ -19,14 +19,14 @@ namespace App.Timer.Back.Api
         public UniTask<SessionFinishedResponse> FinishSession(CancellationToken cancellationToken = default)
             => _http.Post<SessionFinishedResponse>(_apiConfig.FinishSession, cancellationToken: cancellationToken);
 
-        public UniTask CancelSession(CancellationToken cancellationToken = default)
-            => _http.Post(_apiConfig.CancelSession, cancellationToken: cancellationToken);
+        public UniTask<CancelSessionResponse> CancelSession(CancellationToken cancellationToken = default)
+            => _http.Post<CancelSessionResponse>(_apiConfig.CancelSession, cancellationToken: cancellationToken);
 
         public UniTask<RunFinishResponse> FinishRun(RunFinishRequest request, CancellationToken cancellationToken = default)
             => _http.Post<RunFinishResponse>(_apiConfig.FinishRun, request, cancellationToken);
 
-        public UniTask CancelRun(CancellationToken cancellationToken = default)
-            => _http.Post(_apiConfig.CancelRun, cancellationToken: cancellationToken);
+        public UniTask<CancelRunResponse> CancelRun(CancellationToken cancellationToken = default)
+            => _http.Post<CancelRunResponse>(_apiConfig.CancelRun, cancellationToken: cancellationToken);
 
         public UniTask<CurrentRunResponse> GetCurrentRun(CancellationToken cancellationToken = default)
             => _http.Get<CurrentRunResponse>(_apiConfig.CurrentRun, cancellationToken);

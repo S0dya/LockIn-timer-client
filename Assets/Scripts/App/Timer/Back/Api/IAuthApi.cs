@@ -9,5 +9,6 @@ namespace App.Timer.Back.Api
     {
         UniTask<AuthResponse> Login(LoginRequest request, CancellationToken cancellationToken = default);
         UniTask<AuthResponse> Register(RegisterRequest request, CancellationToken cancellationToken = default);
+        UniTask<UserResponse> GetCurrentUser(CancellationToken cancellationToken = default);
     }
 }

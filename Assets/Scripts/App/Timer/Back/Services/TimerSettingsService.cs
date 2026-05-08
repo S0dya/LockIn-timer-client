@@ -2,6 +2,7 @@ using App.Timer.Back.Api;
 using App.Timer.Back.Models;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using PT.Tools.Http;
 using Zenject;
 
 namespace App.Timer.Back.Services
@@ -13,7 +14,7 @@ namespace App.Timer.Back.Services
         public UniTask<SettingsResponse> GetTimerSettings(CancellationToken cancellationToken = default)
             => _api.GetTimerSettings(cancellationToken);
 
-        public UniTask<SettingsResponse> SetTimerSettings(SettingsRequest request, CancellationToken cancellationToken = default)
+        public UniTask<Result<SettingsResponse>> SetTimerSettings(SettingsRequest request, CancellationToken cancellationToken = default)
             => _api.SetTimerSettings(request, cancellationToken);
     }
 }

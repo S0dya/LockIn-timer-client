@@ -8,6 +8,7 @@ namespace App.Timer.Back.Config
         [Header("Auth Endpoints")]
         [SerializeField] private string login = "/auth/login";
         [SerializeField] private string register = "/auth/register";
+        [SerializeField] private string getCurrentUser = "/auth/get-current-user";
         
         [Header("Timer Settings Endpoints")]
         [SerializeField] private string getTimerSettings = "/timer/settings";
@@ -24,8 +25,11 @@ namespace App.Timer.Back.Config
         
         public string Login => login;
         public string Register => register;
+        public string GetCurrentUser => getCurrentUser;
+        
         public string GetTimerSettings => getTimerSettings;
         public string SetTimerSettings => setTimerSettings;
+        
         public string StartSession => startSession;
         public string FinishSession => finishSession;
         public string CancelSession => cancelSession;

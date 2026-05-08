@@ -4,38 +4,42 @@ namespace App.Timer.Back.Models
 {
     public class SessionStartResponse
     {
-        public string SessionId { get; set; }
-        public System.DateTime StartTime { get; set; }
+        public System.Guid RunId { get; set; }
+        public System.DateTime SessionStartedAt { get; set; }
+        public int CompletedSessions { get; set; }
         public int SessionDuration { get; set; }
+        public int PlannedSessionsAmount { get; set; }
     }
 
     public class SessionFinishedResponse
     {
-        public string SessionId { get; set; }
-        public System.DateTime EndTime { get; set; }
-        public int ActualDuration { get; set; }
-        public bool WasCompleted { get; set; }
+        public System.Guid RunId { get; set; }
+        public int CompletedSessions { get; set; }
+        public int SessionDuration { get; set; }
+        public int PlannedSessionsAmount { get; set; }
     }
 
     public class CurrentRunResponse
     {
-        public string SessionId { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public int RemainingSeconds { get; set; }
-        public bool IsActive { get; set; }
+        public int CompletedSessions { get; set; }
+        public int PlannedSessionsAmount { get; set; }
+        public int SessionDuration { get; set; }
+        public System.DateTime? CurrentSessionStartTime { get; set; }
     }
 
     public class RunFinishRequest
     {
-        public string RunDescription { get; set; }
+        public string? RunDescription { get; set; }
     }
 
     public class RunFinishResponse
     {
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
         public int CompletedSessions { get; set; }
         public int PlannedSessionsAmount { get; set; }
         public int SessionDuration { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 
     public class RunHistoryRequest
@@ -51,6 +55,21 @@ namespace App.Timer.Back.Models
         public int CompletedSessions { get; set; }
         public int PlannedSessionsAmount { get; set; }
         public int SessionDuration { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
+    }
+
+    public class CancelSessionResponse
+    {
+        public System.DateTime StartedAt { get; set; }
+        public int SessionProgressionSeconds { get; set; }
+    }
+
+    public class CancelRunResponse
+    {
+        public System.DateTime RunStartTime { get; set; }
+        public System.DateTime CancelledAt { get; set; }
+        public int CompletedSessions { get; set; }
+        public int PlannedSessionsAmount { get; set; }
+        public int SessionDuration { get; set; }
     }
 }

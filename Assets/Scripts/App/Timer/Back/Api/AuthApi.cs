@@ -17,5 +17,8 @@ namespace App.Timer.Back.Api
 
         public UniTask<AuthResponse> Register(RegisterRequest request, CancellationToken cancellationToken = default)
             => _http.Post<AuthResponse>(_apiConfig.Register, request, cancellationToken);
+
+        public UniTask<UserResponse> GetCurrentUser(CancellationToken cancellationToken = default)
+            => _http.Get<UserResponse>(_apiConfig.GetCurrentUser, cancellationToken);
     }
 }
