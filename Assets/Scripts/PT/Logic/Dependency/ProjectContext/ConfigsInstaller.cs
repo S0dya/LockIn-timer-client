@@ -1,3 +1,4 @@
+using App.Timer;
 using App.Timer.Back.Config;
 using PT.GameplayAdditional.Progression;
 using PT.Logic.Configs;
@@ -26,6 +27,7 @@ namespace PT.Logic.Dependency.ProjectContext
         [SerializeField] private StagesConfig stagesConfig;
         [SerializeField] private SettingsInfosConfig settingsInfosConfig;
         [SerializeField] private ApiConfig apiConfig;
+        [SerializeField] private AppConfig appConfig;
         
         public override void InstallBindings()
         {
@@ -42,6 +44,7 @@ namespace PT.Logic.Dependency.ProjectContext
             Container.Bind<SettingsInfosConfig>().FromInstance(settingsInfosConfig).AsSingle();
             
             Container.Bind<ApiConfig>().FromInstance(apiConfig).AsSingle();
+            Container.Bind<AppConfig>().FromInstance(appConfig).AsSingle();
         }
     }
 }

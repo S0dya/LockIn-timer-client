@@ -46,7 +46,7 @@ namespace PT.Tools.Windows
                 return null;
             }
             
-            ((MonoBehaviour)window).transform.SetAsLastSibling();
+            ((MonoBehaviour)window).transform.SetAsLastSibling(); //might move not active windows too 
 
             return window;
         }

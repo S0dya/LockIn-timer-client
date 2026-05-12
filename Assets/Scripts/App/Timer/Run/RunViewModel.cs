@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using App.Timer.Back.Models;
 using App.Timer.Back.Services;
+using App.Timer.Settings;
 using App.Timer.States;
 using App.Timer.Windows;
 using Cysharp.Threading.Tasks;
@@ -16,17 +17,16 @@ namespace App.Timer.Run
     public class RunViewModel : IInitializable, IDisposable
     {
         [Inject] private AppState _appState;
+        [Inject] private AppConfig _appConfig;
         [Inject] private RunService _runService;
         [Inject] private RunSubmitViewWindow _runSubmitViewWindow;
         [Inject] private SessionFinishedViewWindow _sessionFinishedViewWindow;
-        [Inject] private RequestLoadingWindow _requestLoadingWindow;
-        [Inject] private RequestErrorWindow _requestErrorWindow;
         [Inject] private RunTimerClockView _runTimerClockView;
-        [Inject] private RunTimerActionButtons _runTimerActionButtons;
+        [Inject] private RunActionsView _runActionsView;
         [Inject(Id = "Menu")] private WindowsManager _windowsManager;
-        [Inject] private AppWindowsState _appWindowsState;
+        [Inject] private RequestLoadingManager _requestLoadingManager;
+        [Inject] private RequestErrorManager _requestErrorManager;
         
-        private CancellationTokenSource _globalCts = new();
         private readonly CompositeDisposable _disposables = new();
         private IDisposable _timerDisposable;
         private bool _isOperationInProgress = false;
@@ -52,15 +52,19 @@ namespace App.Timer.Run
             _appState.CurrentSessionTime
                 .Subscribe(CurrentSessionTimeChanged)
                 .AddTo(_disposables);
+            
+            _appState.TimerSettingsState
+                .Subscribe(CurrentTimerSettingsChanged)
+                .AddTo(_disposables);
         }
         
         private void SubscribeToWindowEvents()
         {
             _runSubmitViewWindow.OnSubmit += OnRunSubmit;
             _sessionFinishedViewWindow.OnClosePressed += OnSessionFinishedClose;
-            _runTimerActionButtons.OnStartSession += OnStartSession;
-            _runTimerActionButtons.OnCancelRun += OnCancelRun;
-            _runTimerActionButtons.OnCancelSession += OnCancelSession;
+            _runActionsView.OnStartSession += OnStartSession;
+            _runActionsView.OnCancelRun += OnCancelRun;
+            _runActionsView.OnCancelSession += OnCancelSession;
         }
         
         #endregion
@@ -75,13 +79,15 @@ namespace App.Timer.Run
         
         private void CurrentRunChanged(RunState run)
         {
+            if (run == null) return;
+            
             switch (run.RunStatus)
             {
                 case RunStatus.Active:
-                    _runTimerActionButtons.ShowSession();
+                    _runActionsView.ShowSession();
                     break;
                 case RunStatus.Idle:
-                    _runTimerActionButtons.ShowRun();
+                    _runActionsView.ShowRun();
                     break;
                 default: break;
             } 
@@ -93,6 +99,16 @@ namespace App.Timer.Run
             if (run == null) return;
 
             _runTimerClockView.SetTimer(currentTime, run.SessionDuration, run.RunStatus == RunStatus.Active);
+        }
+        
+        private void CurrentTimerSettingsChanged(TimerSettingsState timerSettings)
+        {
+            if (_appState.RunState.Value == null) return;
+            
+            if (_appState.RunState.Value.RunStatus == RunStatus.None)
+            {
+                FetchRun().Forget();
+            }
         }
         
         #endregion
@@ -171,7 +187,16 @@ namespace App.Timer.Run
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"Failed to fetch run: {e.Message}");
-                _appWindowsState.Error.Value = $"Failed to load run data: {e.Message}";
+                
+                _appState.RunState.Value = new RunState()
+                {
+                    RunStatus = RunStatus.None,
+                    SessionDuration = _appState.TimerSettingsState.Value.SessionDuration,
+                    PlannedSessionsAmount = _appState.TimerSettingsState.Value.SessionsAmount,
+                    PlannedSessionsAmountCompletedSessions = 0
+                };
+                
+                // _appWindowsState.Error.Value = $"Failed to load run data: {e.Message}";
             }
         }
 
@@ -188,25 +213,21 @@ namespace App.Timer.Run
             using var cts = new CancellationTokenSource();
             try
             {
-                _appWindowsState.IsLoading.Value = true;
+                using var loading = _requestLoadingManager.AddLoading();
                 
                 var result = await _runService.StartSession(cts.Token);
                 
-                if (!result.IsSuccess) _appWindowsState.Error.Value = result.Error;
-
-                _appWindowsState.IsLoading.Value = false;
+                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
             {
                 DebugManager.Log(DebugCategory.Backend, "TryStartSession operation was cancelled");
-                _appWindowsState.IsLoading.Value = false;
             }
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryStartSession failed with exception: {e.Message}");
-                _appWindowsState.Error.Value = $"Failed to start session: {e.Message}";
-                _appWindowsState.IsLoading.Value = false;
+                _requestErrorManager.ShowError($"Failed to start session: {e.Message}");
             }
             finally
             {
@@ -218,7 +239,7 @@ namespace App.Timer.Run
         {
             var run = _appState.RunState.Value;
 
-            if (run == null || run.RunStatus != RunStatus.Active || _appState.CurrentSessionTime.Value >= 3)
+            if (run == null || run.RunStatus != RunStatus.Active || _appState.CurrentSessionTime.Value >= _appConfig.MinSessionTimeThreshold)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryFinishSession ignored - conditions not met. Run: {run?.RunStatus}, Time: {_appState.CurrentSessionTime.Value}"); return;
             }
@@ -233,7 +254,7 @@ namespace App.Timer.Run
                 if (!result.IsSuccess)
                 {
                     DebugManager.Log(DebugCategory.Backend, $"TryFinishSession failed: {result.Error}");
-                    _appWindowsState.Error.Value = $"{result.Error}";
+                    _requestErrorManager.ShowError($"{result.Error}");
                     return;
                 }
                 
@@ -249,7 +270,7 @@ namespace App.Timer.Run
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryFinishSession failed with exception: {e.Message}");
-                _appWindowsState.Error.Value = $"Failed to finish session: {e.Message}";
+                _requestErrorManager.ShowError($"Failed to finish session: {e.Message}");
             }
         }
 
@@ -266,25 +287,21 @@ namespace App.Timer.Run
             using var cts = new CancellationTokenSource();
             try
             {
-                _appWindowsState.IsLoading.Value = true;
+                using var loading = _requestLoadingManager.AddLoading();
                 
                 var result = await _runService.CancelRun(cts.Token);
                 
-                if (!result.IsSuccess) _appWindowsState.Error.Value = result.Error;
-
-                _appWindowsState.IsLoading.Value = false;
+                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
             {
                 DebugManager.Log(DebugCategory.Backend, "TryCancelRun operation was cancelled");
-                _appWindowsState.IsLoading.Value = false;
             }
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryCancelRun failed with exception: {e.Message}");
-                _appWindowsState.IsLoading.Value = false;
-                _appWindowsState.Error.Value = $"Failed to cancel run: {e.Message}";
+                _requestErrorManager.ShowError($"Failed to cancel run: {e.Message}");
             }
             finally
             {
@@ -305,25 +322,21 @@ namespace App.Timer.Run
             using var cts = new CancellationTokenSource();
             try
             {
-                _appWindowsState.IsLoading.Value = true;
+                using var loading = _requestLoadingManager.AddLoading();
                 
                 var result = await _runService.CancelSession(cts.Token);
                 
-                if (!result.IsSuccess) _windowsManager.Open<RequestErrorWindow>(result.Error).Forget();
-
-                _appWindowsState.IsLoading.Value = false;
+                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
             {
                 DebugManager.Log(DebugCategory.Backend, "TryCancelSession operation was cancelled");
-                _appWindowsState.IsLoading.Value = false;
             }
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryCancelSession failed with exception: {e.Message}");
-                _appWindowsState.IsLoading.Value = false;
-                _appWindowsState.Error.Value = $"Failed to cancel session: {e.Message}";
+                _requestErrorManager.ShowError($"Failed to cancel session: {e.Message}");
             }
             finally
             {
@@ -368,16 +381,8 @@ namespace App.Timer.Run
         
         #region Utility Methods
         
-        private void ResetGlobalCts()
-        {
-            _globalCts.Cancel();
-            _globalCts.Dispose();
-            _globalCts = new CancellationTokenSource();
-        }
-        
         public void CancelAllRequests()
         {
-            _globalCts.Cancel();
             _isOperationInProgress = false;
         }
         
@@ -387,17 +392,15 @@ namespace App.Timer.Run
         
         public void Dispose()
         {
-            _globalCts?.Cancel();
-            _globalCts?.Dispose();
             _disposables.Dispose();
             StopTimerTick();
             
             _runSubmitViewWindow.OnSubmit -= OnRunSubmit;
             _sessionFinishedViewWindow.OnClosePressed -= OnSessionFinishedClose;
             
-            _runTimerActionButtons.OnStartSession -= OnStartSession;
-            _runTimerActionButtons.OnCancelRun -= OnCancelRun;
-            _runTimerActionButtons.OnCancelSession -= OnCancelSession;
+            _runActionsView.OnStartSession -= OnStartSession;
+            _runActionsView.OnCancelRun -= OnCancelRun;
+            _runActionsView.OnCancelSession -= OnCancelSession;
             
             DebugManager.Log(DebugCategory.Backend, "RunViewModel disposed successfully");
         }

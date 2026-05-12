@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using PT.Tools.Windows;
 using TMPro;
 using UnityEngine;
-using UniRx;
 using UnityEngine.UI;
 using Zenject;
 
@@ -15,31 +14,19 @@ namespace App.Timer.Windows
         [SerializeField] private TextMeshProUGUI errorText;
         [Space]
         [SerializeField] private Button closeButton;
-        [SerializeField] private float autoCloseDelay = 10f;
         
-        [Inject] private AppWindowsState _appWindowsState;
-        [Inject (Id = "Menu")] private WindowsManager _windowsManager;
-        
-        private bool isManuallyClosed = false;
-        private CancellationTokenSource autoCloseCancellationToken;
+        public event Action OnClose;
 
         private void Awake()
         {
             closeButton.onClick.AddListener(OnCloseClicked);
-            
-            _appWindowsState.Error.Subscribe(OnErrorOccured).AddTo(this);
         }
 
-        private void OnCloseClicked()
+        protected override async UniTask OnOpen()
         {
-            isManuallyClosed = true;
-            autoCloseCancellationToken?.Cancel();
-            _windowsManager.Close<RequestErrorWindow>().Forget();
-        }
-        
-        private void OnErrorOccured(string errorMessage)
-        {
-            if (!string.IsNullOrEmpty(errorMessage))
+            await base.OnOpen();
+            
+            if (Payload is string errorMessage)
             {
                 errorText.text = errorMessage;
             }
@@ -47,34 +34,11 @@ namespace App.Timer.Windows
             {
                 errorText.text = "Unknown error occurred";
             }
+        }
 
-            _windowsManager.Open<RequestErrorWindow>().Forget();
-            StartAutoClose();
-        }
-        
-        private void StartAutoClose()
+        private void OnCloseClicked()
         {
-            autoCloseCancellationToken?.Cancel();
-            autoCloseCancellationToken = new CancellationTokenSource();
-            
-            AutoCloseAfterDelay(autoCloseCancellationToken.Token).Forget();
-        }
-        
-        private async UniTaskVoid AutoCloseAfterDelay(CancellationToken cancellationToken)
-        {
-            try
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(autoCloseDelay), cancellationToken: cancellationToken);
-                
-                if (!isManuallyClosed && !cancellationToken.IsCancellationRequested)
-                {
-                    _windowsManager.Close<RequestErrorWindow>().Forget();
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // Auto-close was cancelled by manual close
-            }
+            OnClose?.Invoke();
         }
     }
 }

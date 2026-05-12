@@ -31,38 +31,14 @@ SpriteAtlas:
       enableAlphaDilation: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
-    packables:
-    - {fileID: 2800000, guid: b8391f525cc2ae24a858377ec9e3bd8e, type: 3}
-    - {fileID: 2800000, guid: f5d4bbd589e0d3844af4f5b9149d2cf8, type: 3}
-    - {fileID: 2800000, guid: 73446cb6d0c330d41be7d76d8b5c8e8c, type: 3}
-    - {fileID: 2800000, guid: a3431c46c336ed44b8d23d3bc108bd2c, type: 3}
-    - {fileID: 2800000, guid: 9a7d3539080a15f4d982e01ca42b5d3e, type: 3}
-    - {fileID: 2800000, guid: b77ade13c2e141740bea349423e23f73, type: 3}
+    packables: []
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
-    packedSpriteRenderDataKeys:
-    - b8391f525cc2ae24a858377ec9e3bd8e: -8633253176391537618
-    - b77ade13c2e141740bea349423e23f73: -5988070378450740311
-    - f5d4bbd589e0d3844af4f5b9149d2cf8: 6326270409245090419
-    - a3431c46c336ed44b8d23d3bc108bd2c: 434250504675306103
-    - 73446cb6d0c330d41be7d76d8b5c8e8c: -6381605330626397364
-    - 9a7d3539080a15f4d982e01ca42b5d3e: 5106971605649209640
+    packedSpriteRenderDataKeys: []
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: -8633253176391537618, guid: b8391f525cc2ae24a858377ec9e3bd8e, type: 3}
-  - {fileID: -5988070378450740311, guid: b77ade13c2e141740bea349423e23f73, type: 3}
-  - {fileID: 6326270409245090419, guid: f5d4bbd589e0d3844af4f5b9149d2cf8, type: 3}
-  - {fileID: 434250504675306103, guid: a3431c46c336ed44b8d23d3bc108bd2c, type: 3}
-  - {fileID: -6381605330626397364, guid: 73446cb6d0c330d41be7d76d8b5c8e8c, type: 3}
-  - {fileID: 5106971605649209640, guid: 9a7d3539080a15f4d982e01ca42b5d3e, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - Star 2_0
-  - rombus_0
-  - SoftRect_0
-  - ObstacleDot_0
-  - Star 1_0
-  - PlayerBall_0
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
   m_RenderDataMap: {}
   m_Tag: Gameplay Atlas 1
   m_IsVariant: 0

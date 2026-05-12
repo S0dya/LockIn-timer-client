@@ -11,10 +11,33 @@ namespace App.Timer.Back.Services
     {
         [Inject] private readonly ITimerSettingsApi _api;
 
-        public UniTask<SettingsResponse> GetTimerSettings(CancellationToken cancellationToken = default)
-            => _api.GetTimerSettings(cancellationToken);
+        public async UniTask<Result<SettingsResponse>> GetTimerSettings(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _api.GetTimerSettings(cancellationToken);
+                return Result<SettingsResponse>.Success(response);
+            }
+            catch
+            {
+                return Result<SettingsResponse>.Fail("Failed to get timer settings");
+            }
+        }
 
-        public UniTask<Result<SettingsResponse>> SetTimerSettings(SettingsRequest request, CancellationToken cancellationToken = default)
-            => _api.SetTimerSettings(request, cancellationToken);
+        public async UniTask<Result<SettingsResponse>> SetTimerSettings(SettingsRequest request, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var response = await _api.SetTimerSettings(request, cancellationToken);
+                
+                // add Retrying
+                
+                return Result<SettingsResponse>.Success(response);
+            }
+            catch
+            {
+                return Result<SettingsResponse>.Fail("Failed to set timer settings");
+            }
+        }
     }
 }

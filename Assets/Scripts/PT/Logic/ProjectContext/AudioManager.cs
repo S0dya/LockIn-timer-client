@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using FMOD.Studio;
-using FMODUnity;
+// using FMOD.Studio;
+// using FMODUnity;
 using PT.Logic.Configs;
 using PT.Logic.Save;
 using PT.Tools.Debugging;
@@ -14,9 +14,9 @@ namespace PT.Logic.ProjectContext
     {
         [Inject] private AudioConfig _audioConfig;
 
-        private readonly Dictionary<SoundEventEnum, EventInstance> _enumInstancesDict = new();
-        
-        private readonly Dictionary<SoundEventEnum, EventReference> _enumReferencesDict = new();
+        // private readonly Dictionary<SoundEventEnum, EventInstance> _enumInstancesDict = new();
+        // 
+        // private readonly Dictionary<SoundEventEnum, EventReference> _enumReferencesDict = new();
 
          private void Awake()
         {
@@ -25,20 +25,21 @@ namespace PT.Logic.ProjectContext
 
         private async UniTask LoadGameTask()
         {
-            await UniTask.WaitUntil(() => RuntimeManager.HaveAllBanksLoaded);
-            await UniTask.WaitUntil(() => !RuntimeManager.AnySampleDataLoading());
-            DebugManager.Log(DebugCategory.Audio, "All FMOD banks loaded successfully.");
+            // await UniTask.WaitUntil(() => RuntimeManager.HaveAllBanksLoaded);
+            // await UniTask.WaitUntil(() => !RuntimeManager.AnySampleDataLoading());
+            // DebugManager.Log(DebugCategory.Audio, "All FMOD banks loaded successfully.");
+            DebugManager.Log(DebugCategory.Audio, "FMOD is disabled - skipping audio initialization.");
 
-            InitAudio();
+            // InitAudio();
         }
 
         private void InitAudio()
         {
-            foreach (var kvSound in _audioConfig.KvSounds.Dictionary)
-            {
-                _enumReferencesDict.Add(kvSound.Key, kvSound.Value);
-                _enumInstancesDict.Add(kvSound.Key, CreateInstance(kvSound.Value));
-            }
+            // foreach (var kvSound in _audioConfig.KvSounds.Dictionary)
+            // {
+            //     _enumReferencesDict.Add(kvSound.Key, kvSound.Value);
+            //     _enumInstancesDict.Add(kvSound.Key, CreateInstance(kvSound.Value));
+            // }
         }
 
         public void Init()
@@ -48,36 +49,36 @@ namespace PT.Logic.ProjectContext
         
         public void PlayOneShot(SoundEventEnum soundEventEnum, Vector3? position = null, bool isRelease = false)
         {
-            if (!CanPlaySound(soundEventEnum))
-            {
-                DebugManager.Log(DebugCategory.Audio, $"[Skip] Tried playing {soundEventEnum} but sound is off or missing.");
-                return;
-            }
+            // if (!CanPlaySound(soundEventEnum))
+            // {
+            //     DebugManager.Log(DebugCategory.Audio, $"[Skip] Tried playing {soundEventEnum} but sound is off or missing.");
+            //     return;
+            // }
 
-            EventInstance instance = isRelease
-                ? CreateInstance(_enumReferencesDict[soundEventEnum])
-                : _enumInstancesDict[soundEventEnum];
+            // EventInstance instance = isRelease
+            //     ? CreateInstance(_enumReferencesDict[soundEventEnum])
+            //     : _enumInstancesDict[soundEventEnum];
 
-            if (position.HasValue)
-                instance.set3DAttributes(RuntimeUtils.To3DAttributes(position.Value));
+            // if (position.HasValue)
+            //     instance.set3DAttributes(RuntimeUtils.To3DAttributes(position.Value));
 
-            instance.start();
-            if (isRelease) instance.release();
+            // instance.start();
+            // if (isRelease) instance.release();
 
-            DebugManager.Log(DebugCategory.Audio, $"Playing {(isRelease ? "release" : "looped")} sound: {soundEventEnum} {(position.HasValue ? "(3D)" : "(2D)")}");
+            DebugManager.Log(DebugCategory.Audio, $"[FMOD Disabled] Skipping sound: {soundEventEnum} {(position.HasValue ? "(3D)" : "(2D)")}");
         }
         
-        public EventReference GetEventReference(SoundEventEnum sound) => _enumReferencesDict[sound];
-        public EventInstance CreateInstance(SoundEventEnum sound) => RuntimeManager.CreateInstance(GetEventReference(sound));
-        
-        private EventInstance CreateInstance(EventReference sound) => RuntimeManager.CreateInstance(sound);
+        // public EventReference GetEventReference(SoundEventEnum sound) => _enumReferencesDict[sound];
+        // public EventInstance CreateInstance(SoundEventEnum sound) => RuntimeManager.CreateInstance(GetEventReference(sound));
+        // 
+        // private EventInstance CreateInstance(EventReference sound) => RuntimeManager.CreateInstance(sound);
 
-        private bool CanPlaySound(SoundEventEnum soundEventEnum) => GameData.SoundOn && _enumInstancesDict.ContainsKey(soundEventEnum);
+        // private bool CanPlaySound(SoundEventEnum soundEventEnum) => GameData.SoundOn && _enumInstancesDict.ContainsKey(soundEventEnum);
         
         public void ToggleSound(bool toggle)
         {
-            DebugManager.Log(DebugCategory.Audio, $"Sound toggled: {(toggle ? "ON" : "OFF")}");
-            RuntimeManager.GetBus("bus:/").setVolume(toggle ? 1 : 0);
+            DebugManager.Log(DebugCategory.Audio, $"Sound toggled: {(toggle ? "ON" : "OFF")} [FMOD Disabled]");
+            // RuntimeManager.GetBus("bus:/").setVolume(toggle ? 1 : 0);
         }
         
         private void OnApplicationPause(bool value)
@@ -98,13 +99,13 @@ namespace PT.Logic.ProjectContext
 
         internal void ToggleResumeSound(bool toggle)
         {
-            RuntimeManager.PauseAllEvents(!toggle);
-            if (toggle) RuntimeManager.CoreSystem.mixerResume();
-            else RuntimeManager.CoreSystem.mixerSuspend();
+            // RuntimeManager.PauseAllEvents(!toggle);
+            // if (toggle) RuntimeManager.CoreSystem.mixerResume();
+            // else RuntimeManager.CoreSystem.mixerSuspend();
 
-            RuntimeManager.MuteAllEvents(!toggle);
+            // RuntimeManager.MuteAllEvents(!toggle);
 
-            DebugManager.Log(DebugCategory.Audio, $"Mixer {(toggle ? "Resumed / Unmuted" : "Suspended / Muted")}");
+            DebugManager.Log(DebugCategory.Audio, $"Mixer {(toggle ? "Resumed / Unmuted" : "Suspended / Muted")} [FMOD Disabled]");
         }
     }
 }

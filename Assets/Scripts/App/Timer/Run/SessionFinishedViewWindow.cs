@@ -14,7 +14,7 @@ namespace App.Timer.Run
     {
         [SerializeField] private TextMeshProUGUI sessionResultText;
         [Space]
-        [SerializeField] private Button closeButton;
+        [SerializeField] private Button[] closeButtons;
         [SerializeField] private float autoCloseDelay = 3f;
         
         private bool isManuallyClosed = false;
@@ -24,7 +24,7 @@ namespace App.Timer.Run
         
         private void Start()
         {
-            closeButton.onClick.AddListener(CloseButtonClicked);
+            foreach (var closeButton in closeButtons) closeButton.onClick.AddListener(CloseButtonClicked);
         }
         
         private void OnDestroy()

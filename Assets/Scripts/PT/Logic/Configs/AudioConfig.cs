@@ -1,4 +1,3 @@
-using FMODUnity;
 using PT.Tools.Helper;
 using UnityEngine;
 
@@ -21,8 +20,10 @@ namespace PT.Logic.Configs
     [CreateAssetMenu(menuName = "Configs/AudioConfig", fileName = "AudioConfig")]
     public class AudioConfig : ScriptableObject
     {
-        [SerializeField] private SerializableKeyValue<SoundEventEnum, EventReference> kvSounds;
+        // [SerializeField] private SerializableKeyValue<SoundEventEnum, EventReference> kvSounds;
+        [SerializeField] private SerializableKeyValue<SoundEventEnum, object> kvSounds; // Placeholder object instead of EventReference
         
-        public SerializableKeyValue<SoundEventEnum, EventReference> KvSounds => kvSounds;
+        // public SerializableKeyValue<SoundEventEnum, EventReference> KvSounds => kvSounds;
+        public SerializableKeyValue<SoundEventEnum, object> KvSounds => kvSounds; // Return placeholder object
     }
 }

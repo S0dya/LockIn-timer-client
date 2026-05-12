@@ -11,8 +11,8 @@ namespace App.Timer.Login
 {
     public class AuthViewWindow : WindowBase
     {
-        [SerializeField] private TextField nameField;
-        [SerializeField] private TextField passwordField;
+        [SerializeField] private TMP_InputField nameField;
+        [SerializeField] private TMP_InputField passwordField;
         [Space]
         [SerializeField] private BasicButton loginButton;
         [SerializeField] private CanvasGroup loginCg;
@@ -27,8 +27,8 @@ namespace App.Timer.Login
         
         private void Start()
         {
-            nameField.RegisterValueChangedCallback(e => CheckInteractableButtons());
-            passwordField.RegisterValueChangedCallback(e => CheckInteractableButtons());
+            nameField.onValueChanged.AddListener(e => CheckInteractableButtons());
+            passwordField.onValueChanged.AddListener(e => CheckInteractableButtons());
             
             loginButton.SetOnClick(LoginButtonClicked);
             registerButton.SetOnClick(RegisterButtonClicked);
@@ -39,8 +39,8 @@ namespace App.Timer.Login
         
         private void OnEnable()
         {
-            nameField.value = "";
-            passwordField.value = "";
+            nameField.text = "";
+            passwordField.text = "";
             loginCg.interactable = false;
             registerCg.interactable = false;
             
@@ -58,14 +58,14 @@ namespace App.Timer.Login
         {
             if (!ButtonsClickable()) return;
             
-            OnLogin?.Invoke(nameField.value, passwordField.value);
+            OnLogin?.Invoke(nameField.text, passwordField.text);
         }
 
         private void RegisterButtonClicked()
         {
             if (!ButtonsClickable()) return;
             
-            OnRegister?.Invoke(nameField.value, passwordField.value);
+            OnRegister?.Invoke(nameField.text, passwordField.text);
         }
 
         private void CheckInteractableButtons()
@@ -73,9 +73,9 @@ namespace App.Timer.Login
             loginCg.interactable = registerCg.interactable = ButtonsClickable();
         }
 
-        private bool ButtonsClickable() => nameField.value != null 
-                                          && passwordField.value != null 
-                                          && nameField.value.Length > 3
-                                          && passwordField.value.Length > 3;
+        private bool ButtonsClickable() => !string.IsNullOrEmpty(nameField.text) 
+                                          && !string.IsNullOrEmpty(passwordField.text) 
+                                          && nameField.text.Length > 3
+                                          && passwordField.text.Length > 3;
     }
 }

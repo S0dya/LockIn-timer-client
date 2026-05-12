@@ -5,6 +5,7 @@ using App.Timer.Back.Services;
 using App.Timer.States;
 using Cysharp.Threading.Tasks;
 using PT.Tools.Debugging;
+using PT.Tools.Windows;
 using UniRx;
 using Zenject;
 
@@ -15,6 +16,7 @@ namespace App.Timer.Login
         [Inject] private AppState _appState;
         [Inject] private AuthViewWindow _authViewWindow;
         [Inject] private AuthService _authService;
+        [Inject (Id = "Menu")] private WindowsManager _windowsManager;
         
         private readonly CancellationTokenSource _cts = new();
 
@@ -22,22 +24,28 @@ namespace App.Timer.Login
 
         public void Initialize()
         {
-            _appState.CurrentUser.Subscribe(CurrentUserChanged)
+            _appState.CurrentUser
+                .Subscribe(CurrentUserChanged)
                 .AddTo(_disposables);
             
             _authViewWindow.OnLogin += OnLoginButtonClicked;
             _authViewWindow.OnRegister += OnRegisterButtonClicked;
         }
 
+        public void Init()
+        {
+            FetchCurrentUser().Forget();
+        } 
+        
         private void CurrentUserChanged(UserState user)
         {
             if (user == null || user.Username == null)
             {
-                _authViewWindow.OpenAsync().Forget();
+                _windowsManager.Open<AuthViewWindow>().Forget();
             }
             else
             {
-                _authViewWindow.CloseAsync().Forget();
+                _windowsManager.Close<AuthViewWindow>().Forget();
             }
         }
 
@@ -61,7 +69,7 @@ namespace App.Timer.Login
 
             if (loginResult.IsSuccess)
             {
-                OnAuthSuccess();
+                FetchCurrentUser().Forget();
                 return;
             }
             
@@ -79,7 +87,7 @@ namespace App.Timer.Login
 
             if (registerResult.IsSuccess)
             {
-                OnAuthSuccess();
+                FetchCurrentUser().Forget();
                 return;
             }
             
@@ -87,9 +95,9 @@ namespace App.Timer.Login
             _authViewWindow.SetErrorText($"Register failed: {registerResult.Error}");
         }
 
-        private async UniTaskVoid OnAuthSuccess()
+        public async UniTask FetchCurrentUser()
         {
-            var result = await _authService.GetCurrentUser();
+            var result = await _authService.GetCurrentUser(_cts.Token);
 
             if (result.IsSuccess)
             {
@@ -99,7 +107,12 @@ namespace App.Timer.Login
                     UserRole = result.Value.Role,
                 };
             }
-            else DebugManager.Log(DebugCategory.Backend, $"Failed to fetch user, {result.Error}");
+            else
+            {
+                _appState.CurrentUser.Value = null;
+                
+                DebugManager.Log(DebugCategory.Backend, $"Failed to fetch user, {result.Error}");
+            }
         }
         
         public void CancelAllRequests()

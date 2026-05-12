@@ -33,9 +33,6 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: a9d5790dd8d29e94694a82a1fdf86ed9, type: 3}
-    - {fileID: 2800000, guid: 3613504cb8a7a8a4abb4f3fd68053127, type: 3}
-    - {fileID: 2800000, guid: d1311208c6e250a4fb50c981227ac882, type: 3}
-    - {fileID: 2800000, guid: 8fa595eeee36f884aad3a39a889442fc, type: 3}
     - {fileID: 2800000, guid: c79fc62bf85d4c34b889576be0cecde3, type: 3}
     - {fileID: 2800000, guid: 6dd8d0828e0d789419e7f37a12407b40, type: 3}
     - {fileID: 2800000, guid: fcb4205f7d7c8454990a2f3584914c75, type: 3}
@@ -44,28 +41,19 @@ SpriteAtlas:
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 6dd8d0828e0d789419e7f37a12407b40: 655120409791564462
-    - d1311208c6e250a4fb50c981227ac882: 4967069174530466790
     - c79fc62bf85d4c34b889576be0cecde3: -112859468355277172
-    - 3613504cb8a7a8a4abb4f3fd68053127: -4923276002579994359
     - a9d5790dd8d29e94694a82a1fdf86ed9: 21300000
-    - 8fa595eeee36f884aad3a39a889442fc: 21300000
     - fcb4205f7d7c8454990a2f3584914c75: -7603023145131540711
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 655120409791564462, guid: 6dd8d0828e0d789419e7f37a12407b40, type: 3}
-  - {fileID: 4967069174530466790, guid: d1311208c6e250a4fb50c981227ac882, type: 3}
   - {fileID: -112859468355277172, guid: c79fc62bf85d4c34b889576be0cecde3, type: 3}
-  - {fileID: -4923276002579994359, guid: 3613504cb8a7a8a4abb4f3fd68053127, type: 3}
   - {fileID: 21300000, guid: a9d5790dd8d29e94694a82a1fdf86ed9, type: 3}
-  - {fileID: 21300000, guid: 8fa595eeee36f884aad3a39a889442fc, type: 3}
   - {fileID: -7603023145131540711, guid: fcb4205f7d7c8454990a2f3584914c75, type: 3}
   m_PackedSpriteNamesToIndex:
   - WideSlider_Blank_Background_1 1_0
-  - ButtonText_Small_Green_Round 1_0
   - IconButton_Large_Blank_Rounded 1_0
-  - ButtonText_Small_Blue_Round 1_0
   - ButtonText_Small_Blank_Square 1
-  - ButtonText_Small_Orange_Round 1
   - WideSlider_Blank_Frame 1_0
   m_RenderDataMap: {}
   m_Tag: UI Atlas

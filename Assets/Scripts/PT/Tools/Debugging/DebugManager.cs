@@ -41,9 +41,10 @@ namespace PT.Tools.Debugging
     
         Shockwave = 1 << 21,
         Skills = 1 << 22,
+        Internet = 1 << 23,
         
-        Leaderboards = 1 << 23,
-        Addressables = 1 << 24,
+        Leaderboards = 1 << 24,
+        Addressables = 1 << 25,
     
         All = ~0
     }

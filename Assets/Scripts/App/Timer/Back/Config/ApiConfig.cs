@@ -9,7 +9,10 @@ namespace App.Timer.Back.Config
         [SerializeField] private string login = "/auth/login";
         [SerializeField] private string register = "/auth/register";
         [SerializeField] private string getCurrentUser = "/auth/get-current-user";
-        
+     
+        [Header("Internet Check")]
+        [SerializeField] private string checkInternet = "/health";
+
         [Header("Timer Settings Endpoints")]
         [SerializeField] private string getTimerSettings = "/timer/settings";
         [SerializeField] private string setTimerSettings = "/timer/settings";
@@ -26,6 +29,8 @@ namespace App.Timer.Back.Config
         public string Login => login;
         public string Register => register;
         public string GetCurrentUser => getCurrentUser;
+        
+        public string CheckInternet => checkInternet;
         
         public string GetTimerSettings => getTimerSettings;
         public string SetTimerSettings => setTimerSettings;

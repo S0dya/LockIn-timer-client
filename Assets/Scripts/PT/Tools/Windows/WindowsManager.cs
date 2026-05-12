@@ -67,6 +67,9 @@ namespace PT.Tools.Windows
         }
 
         public IWindow GetLastOpened() => _stack.Count > 0 ? _stack.Peek() : null;
+
+        public bool IsOpen<T>() where T : WindowBase 
+            => _openWindows.Contains(windowsFactory.GetWindow<T>());
         
         private void RemoveFromStack(IWindow target)
         {

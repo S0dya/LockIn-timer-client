@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using App.Timer.States;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using PT.Tools.Debugging;
@@ -14,6 +15,7 @@ namespace PT.Tools.Http
     {
         [Inject] private readonly HttpClientConfig _config;
         [Inject] private readonly IAuthStorage _auth;
+        [Inject] private readonly InternetState _internetState;
 
         public async UniTask<T> Get<T>(string url, CancellationToken cancellationToken = default)
         {
@@ -84,25 +86,8 @@ namespace PT.Tools.Http
         {
             DebugManager.Log(DebugCategory.Backend, $"HTTP {request.method} -> {url}");
 
-            try
-            {
-                await request.SendWebRequest().WithCancellation(cancellationToken);
-            }
-            catch (OperationCanceledException e)
-            {
-                request.Abort();
-                throw;
-            }
-
-            var text = request.downloadHandler?.text;
-
-            DebugManager.Log(DebugCategory.Backend, $"HTTP RESPONSE ({request.responseCode}) -> {text}");
-
-            HandleErrors(request, text);
-
-            if (string.IsNullOrEmpty(text))
-                throw new ApiException("Empty response", request.responseCode);
-
+            var text = await Send(request, url, cancellationToken);
+            
             try
             {
                 return JsonConvert.DeserializeObject<T>(text);
@@ -113,11 +98,14 @@ namespace PT.Tools.Http
                 throw;
             }
         }
-
         private async UniTask SendRaw(UnityWebRequest request, string url, CancellationToken cancellationToken)
         {
-            DebugManager.Log(DebugCategory.Backend, $"HTTP {request.method} -> {url}");
+            DebugManager.Log(DebugCategory.Backend, $"RAW HTTP {request.method} -> {url}");
 
+            await Send(request, url, cancellationToken);
+        }
+        private async UniTask<string> Send(UnityWebRequest request, string url, CancellationToken cancellationToken)
+        {
             try
             {
                 await request.SendWebRequest().WithCancellation(cancellationToken);
@@ -125,14 +113,31 @@ namespace PT.Tools.Http
             catch (OperationCanceledException e)
             {
                 request.Abort();
+                DebugManager.Log(DebugCategory.Backend, $"Request was aborted : {request.method} {url}");
                 throw;
             }
-
+            catch (Exception e)
+            {
+                request.Abort();
+                DebugManager.Log(DebugCategory.Backend, $"Request exception details: {e}", LogType.Error);
+            }
+            
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.DataProcessingError)
+            {
+                DebugManager.Log(DebugCategory.Internet, $"Internet connection lost during request to {url}", LogType.Warning);
+                _internetState.IsConnected.Value = false;
+                throw new ApiException("Network error", request.responseCode);
+            }
+            DebugManager.Log(DebugCategory.Internet, "Internet connection confirmed successful for request");
+            _internetState.IsConnected.Value = true;
+            
             var text = request.downloadHandler?.text;
 
             DebugManager.Log(DebugCategory.Backend, $"HTTP RESPONSE ({request.responseCode}) -> {text}");
 
             HandleErrors(request, text);
+
+            return text;
         }
 
         private void HandleErrors(UnityWebRequest request, string body)

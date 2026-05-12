@@ -371,6 +371,8 @@ namespace PT.Tools.Helper
             if (dict == null || dict.Count == 0) return "{}";
             return "{ " + string.Join(", ", dict.Select(kvp => $"{kvp.Key}:{kvp.Value}")) + " }";
         }
+        
+        public static string ConvertSecondsToTime(int seconds) => $"{seconds / 60}:{(seconds % 60):D2}";
 
         #endregion
         #region Extentions
