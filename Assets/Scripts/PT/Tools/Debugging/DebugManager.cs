@@ -45,6 +45,7 @@ namespace PT.Tools.Debugging
         
         Leaderboards = 1 << 24,
         Addressables = 1 << 25,
+        Data = 1 << 26,
     
         All = ~0
     }

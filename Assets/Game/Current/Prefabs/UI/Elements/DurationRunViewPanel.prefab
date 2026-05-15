@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2240804847155814072
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2615057035961141520, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_fontSize
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2615057035961141520, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_fontStyle
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 2615057035961141520, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 264.774
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 54.0365
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -421
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142785682267898858, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7990744585825195925, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      propertyPath: m_Name
+      value: DurationRunViewPanel
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 8788305447709351388, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7990744585825195925, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4352393963093175039}
+  m_SourcePrefab: {fileID: 100100000, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+--- !u!114 &4274616048775042984 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2615057035961141520, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+  m_PrefabInstance: {fileID: 2240804847155814072}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!1 &8213479402521921837 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7990744585825195925, guid: 83f80f923346cf04ea7d2fd56d8db8ec, type: 3}
+  m_PrefabInstance: {fileID: 2240804847155814072}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4352393963093175039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8213479402521921837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0dd01f155464f1e90ae53c4af3082f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::App.Timer.Windows.RunDurationPanelView
+  text: {fileID: 4274616048775042984}

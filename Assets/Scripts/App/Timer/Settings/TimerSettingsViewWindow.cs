@@ -1,13 +1,12 @@
 using System;
+using System.Collections.Generic;
+using App.Timer.States;
 using Cysharp.Threading.Tasks;
 using PT.Tools.Debugging;
 using PT.Tools.Helper;
 using PT.Tools.Windows;
 using PT.UI.Buttons;
-using TMPro;
-using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace App.Timer.Settings
@@ -19,14 +18,27 @@ namespace App.Timer.Settings
         [Space]
         [SerializeField] private BasicButton acceptButton;
         [SerializeField] private BasicButton closeButton;
-
-        //add text to show that it wont update if run is alr going
+        [Space]
+        [SerializeField] private SerializableKeyValue<RunStatus, GameObject[]> runStatusToView;
         
         public event Action<TimerSettingsData> OnAcceptSettingsPressed;
         public event Action OnClosePressed;
 
         [Inject] private AppConfig _appConfig;
 
+        private Dictionary<RunStatus, GameObject[]> _runStatusToView;
+
+        private void Awake()
+        {
+            _runStatusToView = runStatusToView.Dictionary;
+        }
+
+        public void UpdateView(RunStatus status)
+        {
+            foreach (var kvp in _runStatusToView) kvp.Value.SetActive(false);
+            _runStatusToView[status].SetActive(true);
+        }
+        
         protected override async UniTask OnOpen()
         {
             await base.OnOpen();

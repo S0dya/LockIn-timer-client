@@ -11,10 +11,17 @@ namespace App.Timer
         [Space]
         [SerializeField] int minSessionTimeThreshold = 3;
         [SerializeField] int settingsTolerance = 5;
+        [Space]
+        [SerializeField] int defaultTimerSettingsSessionDuration = 1500;
+        [SerializeField] int defaultTimerSettingsSessionsAmount = 2;
         
         public int[] TimerSettingsDurations => timerSettingsDurations;
         public int[] TimerSettingsSessionsAmounts => timerSettingsSessionsAmounts;
+        
         public int MinSessionTimeThreshold => minSessionTimeThreshold;
         public int SettingsTolerance => settingsTolerance;
+        
+        public int DefaultTimerSettingsSessionDuration => defaultTimerSettingsSessionDuration;
+        public int DefaultTimerSettingsSessionsAmount => defaultTimerSettingsSessionsAmount;
     }
 }

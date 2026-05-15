@@ -124,11 +124,11 @@ namespace PT.Tools.Http
             
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.DataProcessingError)
             {
-                DebugManager.Log(DebugCategory.Internet, $"Internet connection lost during request to {url}", LogType.Warning);
+                if (_internetState.IsConnected.Value) DebugManager.Log(DebugCategory.Internet, $"Internet connection lost during request to {url}", LogType.Warning);
                 _internetState.IsConnected.Value = false;
                 throw new ApiException("Network error", request.responseCode);
             }
-            DebugManager.Log(DebugCategory.Internet, "Internet connection confirmed successful for request");
+            if (!_internetState.IsConnected.Value) DebugManager.Log(DebugCategory.Internet, "Internet connection confirmed successful for request");
             _internetState.IsConnected.Value = true;
             
             var text = request.downloadHandler?.text;

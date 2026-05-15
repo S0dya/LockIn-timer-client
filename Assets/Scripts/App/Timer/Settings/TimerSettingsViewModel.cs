@@ -15,7 +15,6 @@ using Zenject;
 
 namespace App.Timer.Settings
 {
-
     public class TimerSettingsViewModel : IInitializable, IDisposable
     {
         [Inject] private AppState _appState;
@@ -38,9 +37,17 @@ namespace App.Timer.Settings
             _runActionsView.OnTimerSettings += OnTimerSettingsPressed;
             _timerSettingsViewWindow.OnAcceptSettingsPressed += OnAcceptSettingsPressed;
             _timerSettingsViewWindow.OnClosePressed += OnClosePressed;
+            
+            _appState.TimerSettingsState.Value = new TimerSettingsState()
+            {
+                SessionDuration = _appConfig.DefaultTimerSettingsSessionDuration,
+                SessionsAmount = _appConfig.DefaultTimerSettingsSessionsAmount
+            };
+        }
 
-            _appState.CurrentUser.Subscribe(OnUserChanged)
-                .AddTo(_disposables);
+        public async UniTask Init()
+        {
+            await FetchTimerSettings();
         }
 
         private void OnTimerSettingsPressed()
@@ -51,7 +58,7 @@ namespace App.Timer.Settings
         }
         private void OnAcceptSettingsPressed(TimerSettingsData settingsData)
         {
-            ApproveNewSettings(settingsData);
+            ApproveNewSettings(settingsData).Forget(); //myb await for error case?
             
             OnClosePressed();
         }
@@ -62,12 +69,6 @@ namespace App.Timer.Settings
             _windowsManager.Close<TimerSettingsViewWindow>().Forget();
         }
 
-        private void OnUserChanged(UserState userState)
-        {
-            if (userState == null) return;
-            FetchTimerSettings().Forget();
-        }
-        
         private async UniTask FetchTimerSettings()
         {
             try
@@ -76,11 +77,7 @@ namespace App.Timer.Settings
                 
                 if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
 
-                _appState.TimerSettingsState.Value = new TimerSettingsState()
-                {
-                    SessionDuration = result.Value.SessionDuration,
-                    SessionsAmount = result.Value.SessionsAmount
-                };
+                SetSettingsResponse(result.Value);
             }
             catch (Exception e)
             {
@@ -102,6 +99,7 @@ namespace App.Timer.Settings
                     _appState.TimerSettingsState.Value.SessionsAmount);
                 var settingsData = new TimerSettingsData(durationsIndex, sessionsAmountIndex);
                 
+                _timerSettingsViewWindow.UpdateView(_appState.RunState.Value.RunStatus);
                 _windowsManager.Open<TimerSettingsViewWindow>(settingsData).Forget();
             }
             catch (Exception e)
@@ -127,7 +125,7 @@ namespace App.Timer.Settings
             }
         }
 
-        private void ApproveNewSettings(TimerSettingsData settingsData)
+        private async UniTask ApproveNewSettings(TimerSettingsData settingsData)
         {
             if (_appConfig.TimerSettingsDurations.Length < settingsData.DurationIndex
                 || settingsData.DurationIndex < 0)
@@ -137,12 +135,46 @@ namespace App.Timer.Settings
                 
             }
             //do same for amountSessions
-            
-            _timerSettingsService.SetTimerSettings(new SettingsRequest()
+
+            if (_appConfig.TimerSettingsDurations[settingsData.DurationIndex] == _appState.TimerSettingsState.Value.SessionDuration &&
+                _appConfig.TimerSettingsSessionsAmounts[settingsData.SessionsAmountIndex] == _appState.TimerSettingsState.Value.SessionsAmount)
             {
-                SessionDuration = _appConfig.TimerSettingsDurations[settingsData.DurationIndex],
-                SessionsAmount = _appConfig.TimerSettingsSessionsAmounts[settingsData.SessionsAmountIndex]
-            });
+                //log that they are similar to before
+
+                return;
+            }
+
+            try
+            {
+                using var loadingToken = _requestLoadingManager.AddLoading();
+                
+                var result = await _timerSettingsService.SetTimerSettings(new SettingsRequest()
+                {
+                    SessionDuration = _appConfig.TimerSettingsDurations[settingsData.DurationIndex],
+                    SessionsAmount = _appConfig.TimerSettingsSessionsAmounts[settingsData.SessionsAmountIndex]
+                }, _cts.Token);
+
+                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                    
+                SetSettingsResponse(result.Value);
+            }
+            catch (Exception e)
+            {
+                _requestErrorManager.ShowError(e.Message);
+            }
+        }
+
+        private void SetSettingsResponse(SettingsResponse response)
+        {
+            var newState = new TimerSettingsState()
+            {
+                SessionDuration = response.SessionDuration,
+                SessionsAmount = response.SessionsAmount
+            };
+
+            if (_appState.TimerSettingsState.Value != null && _appState.TimerSettingsState.Value.Equals(newState)) return;
+
+            _appState.TimerSettingsState.Value = newState;
         }
         
         public void CancelAllRequests()

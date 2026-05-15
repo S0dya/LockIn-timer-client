@@ -9,6 +9,7 @@ using Cysharp.Threading.Tasks;
 using PT.Tools.Debugging;
 using PT.Tools.Windows;
 using UniRx;
+using UnityEngine;
 using Zenject;
 using IInitializable = Zenject.IInitializable;
 
@@ -41,10 +42,6 @@ namespace App.Timer.Run
         
         private void SubscribeToAppState()
         {
-            _appState.CurrentUser
-                .Subscribe(CurrentUserChanged)
-                .AddTo(_disposables);
-
             _appState.RunState
                 .Subscribe(CurrentRunChanged)
                 .AddTo(_disposables);
@@ -61,36 +58,35 @@ namespace App.Timer.Run
         private void SubscribeToWindowEvents()
         {
             _runSubmitViewWindow.OnSubmit += OnRunSubmit;
+            _runSubmitViewWindow.OnCloseClicked += OnCloseSubmitRun;
+            
             _sessionFinishedViewWindow.OnClosePressed += OnSessionFinishedClose;
+            
             _runActionsView.OnStartSession += OnStartSession;
             _runActionsView.OnCancelRun += OnCancelRun;
             _runActionsView.OnCancelSession += OnCancelSession;
+            _runActionsView.OnSubmitRun += OnOpenSubmitRun;
+        }
+        
+        #endregion
+        
+        #region Public Methods
+
+        public async UniTask Init()
+        {
+            await FetchRun();
         }
         
         #endregion
         
         #region AppState Handlers
         
-        private void CurrentUserChanged(UserState user)
-        {
-            if (user == null) return;
-            FetchRun().Forget();
-        }
-        
         private void CurrentRunChanged(RunState run)
         {
             if (run == null) return;
-            
-            switch (run.RunStatus)
-            {
-                case RunStatus.Active:
-                    _runActionsView.ShowSession();
-                    break;
-                case RunStatus.Idle:
-                    _runActionsView.ShowRun();
-                    break;
-                default: break;
-            } 
+
+            _runActionsView.UpdateView(run);
+            _runTimerClockView.UpdateView(run.RunStatus);
         }
 
         private void CurrentSessionTimeChanged(int currentTime)
@@ -104,15 +100,20 @@ namespace App.Timer.Run
         private void CurrentTimerSettingsChanged(TimerSettingsState timerSettings)
         {
             if (_appState.RunState.Value == null) return;
-            
+
             if (_appState.RunState.Value.RunStatus == RunStatus.None)
             {
+                DebugManager.Log(DebugCategory.Backend, "Settings changed while run is not active so fetching run");
+                
                 FetchRun().Forget();
             }
         }
         
         #endregion
-        
+        private void OnOpenSubmitRun()
+        {
+            _windowsManager.Open<RunSubmitViewWindow>().Forget();
+        }
         #region Window Event Handlers
         
         private void OnRunSubmit(string description)
@@ -121,11 +122,19 @@ namespace App.Timer.Run
             {
                 RunDescription = description,
             }).Forget();
+            
+            FetchRun().Forget();
+            
+            OnCloseSubmitRun();
+        }
+        private void OnCloseSubmitRun()
+        {
+            _windowsManager.Close<RunSubmitViewWindow>().Forget();
         }
         
         private void OnSessionFinishedClose()
         {
-            _windowsManager.Close<RunSubmitViewWindow>().Forget();
+            _windowsManager.Close<SessionFinishedViewWindow>().Forget();
             FetchRun().Forget();
         }
         
@@ -151,21 +160,41 @@ namespace App.Timer.Run
         
         #region Session Management
         
-        private async UniTaskVoid FetchRun()
+        private async UniTask FetchRun()
         {
             DebugManager.Log(DebugCategory.Backend, "Starting FetchRun operation");
             
             using var cts = new CancellationTokenSource();
             try
             {
-                var runResponse = await _runService.GetCurrentRun(cts.Token);
-                DebugManager.Log(DebugCategory.Backend, $"FetchRun completed successfully. Status: {(runResponse.CurrentSessionStartTime != null ? "Active" : "Idle")}");
+                var result = await _runService.GetCurrentRun(cts.Token);
+                DebugManager.Log(DebugCategory.Backend, $"FetchRun completed successfully. Status: {(result.IsSuccess)}");
 
+                if (!result.IsSuccess || result.Value == null)
+                {
+                    DebugManager.Log(DebugCategory.Backend, $"No active run fetched, creating empty");
+
+                    var emptyRun = new RunState()
+                    {
+                        RunStatus = RunStatus.None,
+                        SessionDuration = _appState.TimerSettingsState.Value.SessionDuration,
+                        PlannedSessionsAmount = _appState.TimerSettingsState.Value.SessionsAmount,
+                        PlannedSessionsAmountCompletedSessions = 0
+                    };
+
+                    if (_appState.RunState.Value != null && _appState.RunState.Value.Equals(emptyRun)) return;
+                        
+                    _appState.RunState.Value = emptyRun; 
+
+                    return;
+                }
+
+                var runResponse = result.Value;
                 var status = runResponse.CurrentSessionStartTime != null ? RunStatus.Active : RunStatus.Idle;
                 var currentTime = runResponse.CurrentSessionStartTime == null ? runResponse.SessionDuration
                     : (int)Math.Max(0, runResponse.SessionDuration - (DateTime.UtcNow - runResponse.CurrentSessionStartTime.Value).TotalSeconds);
 
-                _appState.RunState.Value = new RunState()
+                var newRun = new RunState()
                 {
                     RunStatus = status,
                     SessionDuration = runResponse.SessionDuration,
@@ -173,6 +202,9 @@ namespace App.Timer.Run
                     PlannedSessionsAmountCompletedSessions = runResponse.CompletedSessions
                 };
 
+                if (_appState.RunState.Value != null && _appState.RunState.Value.Equals(newRun)) return;
+                
+                _appState.RunState.Value = newRun;
                 _appState.CurrentSessionTime.Value = currentTime;
 
                 if (status == RunStatus.Active) StartTimerTick();
@@ -187,16 +219,6 @@ namespace App.Timer.Run
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"Failed to fetch run: {e.Message}");
-                
-                _appState.RunState.Value = new RunState()
-                {
-                    RunStatus = RunStatus.None,
-                    SessionDuration = _appState.TimerSettingsState.Value.SessionDuration,
-                    PlannedSessionsAmount = _appState.TimerSettingsState.Value.SessionsAmount,
-                    PlannedSessionsAmountCompletedSessions = 0
-                };
-                
-                // _appWindowsState.Error.Value = $"Failed to load run data: {e.Message}";
             }
         }
 
@@ -257,9 +279,11 @@ namespace App.Timer.Run
                     _requestErrorManager.ShowError($"{result.Error}");
                     return;
                 }
+
+                // await FetchRun();
                 
                 DebugManager.Log(DebugCategory.Backend, "TryFinishSession completed successfully");
-                _windowsManager.Open<RunSubmitViewWindow>(new SessionFinishedData(
+                _windowsManager.Open<SessionFinishedViewWindow>(new SessionFinishedData(
                         run.PlannedSessionsAmountCompletedSessions, run.PlannedSessionsAmount))
                     .Forget();
             }

@@ -77,29 +77,29 @@ namespace App.Timer.Back.Services
             }
         }
 
-        public async UniTask<CurrentRunResponse> GetCurrentRun(CancellationToken cancellationToken = default)
+        public async UniTask<Result<CurrentRunResponse>> GetCurrentRun(CancellationToken cancellationToken = default)
         {
             try
             {
                 var response = await _api.GetCurrentRun(cancellationToken);
-                return response;
+                return Result<CurrentRunResponse>.Success(response);
             }
             catch
             {
-                return null;
+                return Result<CurrentRunResponse>.Fail("Failed to get current run");
             }
         }
 
-        public async UniTask<List<RunHistoryResponse>> GetRunHistory(RunHistoryRequest request, CancellationToken cancellationToken = default)
+        public async UniTask<Result<List<RunHistoryResponse>>> GetRunHistory(RunHistoryRequest request, CancellationToken cancellationToken = default)
         {
             try
             {
                 var response = await _api.GetRunHistory(request, cancellationToken);
-                return response;
+                return Result<List<RunHistoryResponse>>.Success(response);
             }
             catch
             {
-                return null;
+                return Result<List<RunHistoryResponse>>.Fail("Failed to get run history");
             }
         }
     }

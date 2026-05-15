@@ -16,13 +16,7 @@ namespace App
         {
             DebugManager.Log(DebugCategory.Points, $"AppBootstrapper Initialize");
 
-            try
-            {
-                using var loadingToken = _requestLoadingManager.AddLoading();
-                
-                await _syncService.Synchronize();
-            }
-            catch{}
+            _syncService.Synchronize().Forget();
         }
     }
 }

@@ -32,11 +32,6 @@ namespace App.Timer.Login
             _authViewWindow.OnRegister += OnRegisterButtonClicked;
         }
 
-        public void Init()
-        {
-            FetchCurrentUser().Forget();
-        } 
-        
         private void CurrentUserChanged(UserState user)
         {
             if (user == null || user.Username == null)
@@ -101,16 +96,20 @@ namespace App.Timer.Login
 
             if (result.IsSuccess)
             {
-                _appState.CurrentUser.Value = new UserState()
+                var newUser = new UserState()
                 {
                     Username = result.Value.Username,
                     UserRole = result.Value.Role,
                 };
+
+                if (_appState.CurrentUser.Value != null && _appState.CurrentUser.Value.Equals(newUser)) return;
+
+                _appState.CurrentUser.Value = newUser;
             }
             else
             {
                 _appState.CurrentUser.Value = null;
-                
+
                 DebugManager.Log(DebugCategory.Backend, $"Failed to fetch user, {result.Error}");
             }
         }

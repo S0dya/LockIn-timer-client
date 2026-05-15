@@ -12,8 +12,6 @@ namespace App.Timer.Run
 {
     public class SessionFinishedViewWindow : WindowBase
     {
-        [SerializeField] private TextMeshProUGUI sessionResultText;
-        [Space]
         [SerializeField] private Button[] closeButtons;
         [SerializeField] private float autoCloseDelay = 3f;
         
@@ -37,10 +35,9 @@ namespace App.Timer.Run
         {
             isManuallyClosed = false;
             
-            if (Payload is SessionFinishedData sessionFinishedData)
-            {
-                sessionResultText.text = $"{sessionFinishedData.CompletedSessions} / {sessionFinishedData.PlannedSessionsAmount}";
-            }
+            // if (Payload is SessionFinishedData sessionFinishedData)
+            // {
+            // }
             
             await base.OnOpen();
             

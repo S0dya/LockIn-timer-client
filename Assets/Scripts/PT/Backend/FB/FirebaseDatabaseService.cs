@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using PT.Backend.Interfaces;

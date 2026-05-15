@@ -28,12 +28,14 @@ namespace App.Timer.Run
         {
             await base.OnOpen();
 
-            inputField.text = "";
+            // inputField.text = "";
         }
         
         private void SubmitButtonClicked()
         {
             OnSubmit?.Invoke(inputField.text);
+            
+            inputField.text = "";
         }
 
         private void CloseClicked()

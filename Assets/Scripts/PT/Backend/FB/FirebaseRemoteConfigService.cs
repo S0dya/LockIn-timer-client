@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS || UNITY_ANDROID
+#if UNITY_IOS || UNITY_ANDROID
 using PT.Backend.Interfaces;
 
 namespace PT.Backend.FB

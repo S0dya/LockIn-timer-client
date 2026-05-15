@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS || UNITY_ANDROID
+#if UNITY_IOS || UNITY_ANDROID
 using System.Collections.Generic;
 using PT.Backend.Interfaces;
 

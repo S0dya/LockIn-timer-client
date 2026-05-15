@@ -47,6 +47,8 @@ namespace PT.Tools.Helper
     
         public static void SetActive(this GameObject[] objects, bool active)
         {
+            if (objects == null || objects.Length == 0) return;
+            
             foreach (var obj in objects) obj.SetActive(active);
         }
 
