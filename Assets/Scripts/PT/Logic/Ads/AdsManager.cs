@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using PT.Logic.Configs;
 using PT.Logic.Dependency.Signals;
 using PT.Tools.Debugging;
@@ -12,7 +13,7 @@ namespace PT.Logic.Ads
     public class AdsManager : MonoBehaviour
     {
         [Inject] private AdConfig _adConfig;
-        [Inject] private IAdsService _adsService;
+        [Inject (Optional = true)] private IAdsService _adsService;
         [Inject (Optional = true)] private IBannerService _bannerService;
         [Inject] private SignalBus _signalBus;
 

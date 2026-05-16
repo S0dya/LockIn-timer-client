@@ -97,13 +97,13 @@ namespace PT.Logic.Save
 
             var data = SaveData();
             
-            _saveService.Save(data);
+            _saveService?.Save(data);
 
             TryCloudSave(data, forceCloudSave);
         }
         public void Load()
         {
-            LoadData(_saveService.Load());
+            LoadData(_saveService?.Load());
 
             _canSave = true;
         }
