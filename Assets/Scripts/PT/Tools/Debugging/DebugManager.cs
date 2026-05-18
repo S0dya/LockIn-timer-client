@@ -46,6 +46,10 @@ namespace PT.Tools.Debugging
         Leaderboards = 1 << 24,
         Addressables = 1 << 25,
         Data = 1 << 26,
+        
+        TimerRun = 1 << 27,
+        TimerSettings = 1 << 28,
+        TimerAuth = 1 << 29,
     
         All = ~0
     }

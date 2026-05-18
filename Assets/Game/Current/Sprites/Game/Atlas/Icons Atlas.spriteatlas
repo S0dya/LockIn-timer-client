@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Icons Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 30bd3501ca2811f4d858b1b97e72674a, type: 3}
+    - {fileID: 2800000, guid: 9a82106d62e73fa4b8867add4f74fe08, type: 3}
+    - {fileID: 2800000, guid: 2db19860e75fec54b9dc2c6d0c72f2cc, type: 3}
+    - {fileID: 2800000, guid: 72ecbd1af89f4e3498d11d693227ea34, type: 3}
+    - {fileID: 2800000, guid: ddd37ecae988d3a4a8981ece309094fd, type: 3}
+    - {fileID: 2800000, guid: d07f40ff48843374c812b41921cfae1e, type: 3}
+    - {fileID: 2800000, guid: 0815720f0dd608b4abcbc1058b1be6aa, type: 3}
+    - {fileID: 2800000, guid: 6ad7bd5237c0db34fb2828c771305ab2, type: 3}
+    - {fileID: 2800000, guid: ce369bec644674c499ce6d1657694978, type: 3}
+    - {fileID: 2800000, guid: 2a9037c2350d3ad49a80461e5a6294a1, type: 3}
+    - {fileID: 2800000, guid: 84d5581722cb2f1489a8002d7eceba02, type: 3}
+    - {fileID: 2800000, guid: 79dcd9bc631ce9b47b7a01d07ebbc06d, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 2db19860e75fec54b9dc2c6d0c72f2cc: 6136400503616805991
+    - 30bd3501ca2811f4d858b1b97e72674a: 21300000
+    - 6ad7bd5237c0db34fb2828c771305ab2: 21300000
+    - 2a9037c2350d3ad49a80461e5a6294a1: 21300000
+    - 84d5581722cb2f1489a8002d7eceba02: 21300000
+    - 72ecbd1af89f4e3498d11d693227ea34: 21300000
+    - ddd37ecae988d3a4a8981ece309094fd: 2028145815805844585
+    - 79dcd9bc631ce9b47b7a01d07ebbc06d: 21300000
+    - ce369bec644674c499ce6d1657694978: 21300000
+    - 9a82106d62e73fa4b8867add4f74fe08: 21300000
+    - 0815720f0dd608b4abcbc1058b1be6aa: 21300000
+    - d07f40ff48843374c812b41921cfae1e: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 6136400503616805991, guid: 2db19860e75fec54b9dc2c6d0c72f2cc, type: 3}
+  - {fileID: 21300000, guid: 30bd3501ca2811f4d858b1b97e72674a, type: 3}
+  - {fileID: 21300000, guid: 6ad7bd5237c0db34fb2828c771305ab2, type: 3}
+  - {fileID: 21300000, guid: 2a9037c2350d3ad49a80461e5a6294a1, type: 3}
+  - {fileID: 21300000, guid: 84d5581722cb2f1489a8002d7eceba02, type: 3}
+  - {fileID: 21300000, guid: 72ecbd1af89f4e3498d11d693227ea34, type: 3}
+  - {fileID: 2028145815805844585, guid: ddd37ecae988d3a4a8981ece309094fd, type: 3}
+  - {fileID: 21300000, guid: 79dcd9bc631ce9b47b7a01d07ebbc06d, type: 3}
+  - {fileID: 21300000, guid: ce369bec644674c499ce6d1657694978, type: 3}
+  - {fileID: 21300000, guid: 9a82106d62e73fa4b8867add4f74fe08, type: 3}
+  - {fileID: 21300000, guid: 0815720f0dd608b4abcbc1058b1be6aa, type: 3}
+  - {fileID: 21300000, guid: d07f40ff48843374c812b41921cfae1e, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - description_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48_0
+  - arrow_forward_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - Minus
+  - Plus
+  - visibility_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - Error
+  - flag_2_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48_0
+  - visibility_off_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - person_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - Christ
+  - lock_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - Wifi
+  m_RenderDataMap: {}
+  m_Tag: Icons Atlas
+  m_IsVariant: 0

@@ -103,7 +103,7 @@ namespace App.Timer.Run
 
             if (_appState.RunState.Value.RunStatus == RunStatus.None)
             {
-                DebugManager.Log(DebugCategory.Backend, "Settings changed while run is not active so fetching run");
+                DebugManager.Log(DebugCategory.TimerRun, "Settings changed while run is not active, fetching run");
                 
                 FetchRun().Forget();
             }
@@ -118,6 +118,7 @@ namespace App.Timer.Run
         
         private void OnRunSubmit(string description)
         {
+            DebugManager.Log(DebugCategory.TimerRun, "Submitting run with description");
             _runService.FinishRun(new RunFinishRequest()
             {
                 RunDescription = description,
@@ -129,11 +130,13 @@ namespace App.Timer.Run
         }
         private void OnCloseSubmitRun()
         {
+            DebugManager.Log(DebugCategory.TimerRun, "Closing submit run window");
             _windowsManager.Close<RunSubmitViewWindow>().Forget();
         }
         
         private void OnSessionFinishedClose()
         {
+            DebugManager.Log(DebugCategory.TimerRun, "Closing session finished window");
             _windowsManager.Close<SessionFinishedViewWindow>().Forget();
             FetchRun().Forget();
         }
@@ -162,7 +165,7 @@ namespace App.Timer.Run
         
         private async UniTask FetchRun()
         {
-            DebugManager.Log(DebugCategory.Backend, "Starting FetchRun operation");
+            DebugManager.Log(DebugCategory.TimerRun, "Fetching current run state");
             
             using var cts = new CancellationTokenSource();
             try
@@ -172,7 +175,7 @@ namespace App.Timer.Run
 
                 if (!result.IsSuccess || result.Value == null)
                 {
-                    DebugManager.Log(DebugCategory.Backend, $"No active run fetched, creating empty");
+                    DebugManager.Log(DebugCategory.TimerRun, "No active run, initializing empty run state");
 
                     var emptyRun = new RunState()
                     {
@@ -207,10 +210,14 @@ namespace App.Timer.Run
                 _appState.RunState.Value = newRun;
                 _appState.CurrentSessionTime.Value = currentTime;
 
-                if (status == RunStatus.Active) StartTimerTick();
-                else StopTimerTick();
-                
-                DebugManager.Log(DebugCategory.Backend, "FetchRun state updated successfully");
+                if (status == RunStatus.Active)
+                {
+                    StartTimerTick();
+                }
+                else
+                {
+                    StopTimerTick();
+                }
             }
             catch (OperationCanceledException)
             {
@@ -226,10 +233,10 @@ namespace App.Timer.Run
         {
             if (_isOperationInProgress)
             {
-                DebugManager.Log(DebugCategory.Backend, "TryStartSession ignored - operation already in progress"); return;
+                DebugManager.Log(DebugCategory.TimerRun, "Start session ignored - operation already in progress"); return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, "Starting TryStartSession operation");
+            DebugManager.Log(DebugCategory.TimerRun, "Attempting to start session");
             _isOperationInProgress = true;
             
             using var cts = new CancellationTokenSource();
@@ -239,7 +246,10 @@ namespace App.Timer.Run
                 
                 var result = await _runService.StartSession(cts.Token);
                 
-                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                if (!result.IsSuccess)
+                {
+                    _requestErrorManager.ShowError(result.Error);
+                }
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
@@ -263,10 +273,10 @@ namespace App.Timer.Run
 
             if (run == null || run.RunStatus != RunStatus.Active || _appState.CurrentSessionTime.Value >= _appConfig.MinSessionTimeThreshold)
             {
-                DebugManager.Log(DebugCategory.Backend, $"TryFinishSession ignored - conditions not met. Run: {run?.RunStatus}, Time: {_appState.CurrentSessionTime.Value}"); return;
+                DebugManager.Log(DebugCategory.TimerRun, $"Finish session ignored - conditions not met. Run: {run?.RunStatus}, Time: {_appState.CurrentSessionTime.Value}"); return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, "Starting TryFinishSession operation");
+            DebugManager.Log(DebugCategory.TimerRun, "Attempting to finish session");
             
             using var cts = new CancellationTokenSource();
             try
@@ -275,14 +285,12 @@ namespace App.Timer.Run
 
                 if (!result.IsSuccess)
                 {
-                    DebugManager.Log(DebugCategory.Backend, $"TryFinishSession failed: {result.Error}");
+                    DebugManager.Log(DebugCategory.TimerRun, "Finish session failed");
                     _requestErrorManager.ShowError($"{result.Error}");
                     return;
                 }
 
-                // await FetchRun();
-                
-                DebugManager.Log(DebugCategory.Backend, "TryFinishSession completed successfully");
+                DebugManager.Log(DebugCategory.TimerRun, "Session finished successfully, showing completion window");
                 _windowsManager.Open<SessionFinishedViewWindow>(new SessionFinishedData(
                         run.PlannedSessionsAmountCompletedSessions, run.PlannedSessionsAmount))
                     .Forget();
@@ -302,10 +310,10 @@ namespace App.Timer.Run
         {
             if (_isOperationInProgress)
             {
-                DebugManager.Log(DebugCategory.Backend, "TryCancelRun ignored - operation already in progress"); return;
+                DebugManager.Log(DebugCategory.TimerRun, "Cancel run ignored - operation already in progress"); return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, "Starting TryCancelRun operation");
+            DebugManager.Log(DebugCategory.TimerRun, "Attempting to cancel run");
             _isOperationInProgress = true;
             
             using var cts = new CancellationTokenSource();
@@ -315,7 +323,15 @@ namespace App.Timer.Run
                 
                 var result = await _runService.CancelRun(cts.Token);
                 
-                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                if (!result.IsSuccess)
+                {
+                    DebugManager.Log(DebugCategory.TimerRun, "Cancel run failed");
+                    _requestErrorManager.ShowError(result.Error);
+                }
+                else
+                {
+                    DebugManager.Log(DebugCategory.TimerRun, "Run cancelled successfully");
+                }
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
@@ -330,17 +346,17 @@ namespace App.Timer.Run
             finally
             {
                 _isOperationInProgress = false;
-                DebugManager.Log(DebugCategory.Backend, "TryCancelRun operation completed");
+                DebugManager.Log(DebugCategory.TimerRun, "Cancel run operation completed");
             }
         }
         private async void TryCancelSession()
         {
             if (_isOperationInProgress)
             {
-                DebugManager.Log(DebugCategory.Backend, "TryCancelSession ignored - operation already in progress"); return;
+                DebugManager.Log(DebugCategory.TimerRun, "Cancel session ignored - operation already in progress"); return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, "Starting TryCancelSession operation");
+            DebugManager.Log(DebugCategory.TimerRun, "Attempting to cancel session");
             _isOperationInProgress = true;
             
             using var cts = new CancellationTokenSource();
@@ -350,7 +366,15 @@ namespace App.Timer.Run
                 
                 var result = await _runService.CancelSession(cts.Token);
                 
-                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                if (!result.IsSuccess)
+                {
+                    DebugManager.Log(DebugCategory.TimerRun, "Cancel session failed");
+                    _requestErrorManager.ShowError(result.Error);
+                }
+                else
+                {
+                    DebugManager.Log(DebugCategory.TimerRun, "Session cancelled successfully");
+                }
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
@@ -375,6 +399,7 @@ namespace App.Timer.Run
         private void StartTimerTick()
         {
             StopTimerTick();
+            DebugManager.Log(DebugCategory.TimerRun, "Starting timer tick");
 
             _timerDisposable = Observable
                 .Interval(TimeSpan.FromSeconds(1))
@@ -386,6 +411,7 @@ namespace App.Timer.Run
 
                     if (currentTime <= 0)
                     {
+                        DebugManager.Log(DebugCategory.TimerRun, "Timer reached zero, finishing session");
                         StopTimerTick();
                         TryFinishSession();
                         return;
@@ -397,6 +423,10 @@ namespace App.Timer.Run
         
         private void StopTimerTick()
         {
+            if (_timerDisposable != null)
+            {
+                DebugManager.Log(DebugCategory.TimerRun, "Stopping timer tick");
+            }
             _timerDisposable?.Dispose();
             _timerDisposable = null;
         }
@@ -425,8 +455,6 @@ namespace App.Timer.Run
             _runActionsView.OnStartSession -= OnStartSession;
             _runActionsView.OnCancelRun -= OnCancelRun;
             _runActionsView.OnCancelSession -= OnCancelSession;
-            
-            DebugManager.Log(DebugCategory.Backend, "RunViewModel disposed successfully");
         }
         
         #endregion

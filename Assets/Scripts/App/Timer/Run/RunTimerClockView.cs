@@ -22,23 +22,16 @@ namespace App.Timer.Run
         [Space]
         [SerializeField] private SerializableKeyValue<RunStatus, GameObject[]> runStatusToView;
 
-        private Dictionary<RunStatus, GameObject[]> _runStatusToView;
-
         private float _currentFill;
 
         private Tween _fillTween;
         private Tween _rotationTween;
 
-        private void Awake()
-        {
-            _runStatusToView = runStatusToView.Dictionary;
-        }
-
         public void UpdateView(RunStatus status)
         {
-            foreach (var kvp in _runStatusToView) kvp.Value.SetActive(false);
+            foreach (var kvp in runStatusToView.Dictionary) kvp.Value.SetActive(false);
 
-            _runStatusToView[status].SetActive(true);
+            runStatusToView.Dictionary[status].SetActive(true);
         }
 
         public void SetTimer(int time, int totalTime, bool playing = false)

@@ -28,33 +28,41 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 0
       enableTightPacking: 0
-      enableAlphaDilation: 0
+      enableAlphaDilation: 1
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: a9d5790dd8d29e94694a82a1fdf86ed9, type: 3}
-    - {fileID: 2800000, guid: c79fc62bf85d4c34b889576be0cecde3, type: 3}
     - {fileID: 2800000, guid: 6dd8d0828e0d789419e7f37a12407b40, type: 3}
+    - {fileID: 2800000, guid: 3403d875dd418984a8b257866fb2a80b, type: 3}
+    - {fileID: 2800000, guid: 7143da0da7b1c6d478971f28c9fa3c71, type: 3}
+    - {fileID: 2800000, guid: bd00e95feff967c4db551507e7442d4a, type: 3}
+    - {fileID: 2800000, guid: 5102f04f0d826cb4eb7658a4db8e90da, type: 3}
     - {fileID: 2800000, guid: fcb4205f7d7c8454990a2f3584914c75, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 6dd8d0828e0d789419e7f37a12407b40: 655120409791564462
-    - c79fc62bf85d4c34b889576be0cecde3: -112859468355277172
-    - a9d5790dd8d29e94694a82a1fdf86ed9: 21300000
+    - 3403d875dd418984a8b257866fb2a80b: 21300000
+    - 7143da0da7b1c6d478971f28c9fa3c71: 21300000
+    - 5102f04f0d826cb4eb7658a4db8e90da: 21300000
     - fcb4205f7d7c8454990a2f3584914c75: -7603023145131540711
+    - bd00e95feff967c4db551507e7442d4a: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 655120409791564462, guid: 6dd8d0828e0d789419e7f37a12407b40, type: 3}
-  - {fileID: -112859468355277172, guid: c79fc62bf85d4c34b889576be0cecde3, type: 3}
-  - {fileID: 21300000, guid: a9d5790dd8d29e94694a82a1fdf86ed9, type: 3}
+  - {fileID: 21300000, guid: 3403d875dd418984a8b257866fb2a80b, type: 3}
+  - {fileID: 21300000, guid: 7143da0da7b1c6d478971f28c9fa3c71, type: 3}
+  - {fileID: 21300000, guid: 5102f04f0d826cb4eb7658a4db8e90da, type: 3}
   - {fileID: -7603023145131540711, guid: fcb4205f7d7c8454990a2f3584914c75, type: 3}
+  - {fileID: 21300000, guid: bd00e95feff967c4db551507e7442d4a, type: 3}
   m_PackedSpriteNamesToIndex:
   - WideSlider_Blank_Background_1 1_0
-  - IconButton_Large_Blank_Rounded 1_0
-  - ButtonText_Small_Blank_Square 1
+  - TimerKnob
+  - Button
+  - Panel
   - WideSlider_Blank_Frame 1_0
+  - ApplyButton
   m_RenderDataMap: {}
   m_Tag: UI Atlas
   m_IsVariant: 0

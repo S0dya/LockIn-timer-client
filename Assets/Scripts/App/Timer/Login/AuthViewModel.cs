@@ -46,16 +46,20 @@ namespace App.Timer.Login
 
         private void OnLoginButtonClicked(string name, string password)
         {
+            DebugManager.Log(DebugCategory.TimerAuth, $"Login button clicked for user: {name}");
             TryLogin(name, password).Forget();
         }
 
         private void OnRegisterButtonClicked(string name, string password)
         {
+            DebugManager.Log(DebugCategory.TimerAuth, $"Register button clicked for user: {name}");
             TryRegister(name, password).Forget();
         }
 
         private async UniTask TryLogin(string name, string password)
         {
+            DebugManager.Log(DebugCategory.TimerAuth, "Starting Login operation");
+            
             var loginResult = await _authService.Login(new LoginRequest()
             {
                 Username = name,
@@ -64,16 +68,19 @@ namespace App.Timer.Login
 
             if (loginResult.IsSuccess)
             {
+                DebugManager.Log(DebugCategory.TimerAuth, "Login successful, fetching current user");
                 FetchCurrentUser().Forget();
                 return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, $"Login failed, {loginResult.Error}");
+            DebugManager.Log(DebugCategory.TimerAuth, "Login failed");
             _authViewWindow.SetErrorText($"Login failed: {loginResult.Error}");
         }
 
         private async UniTask TryRegister(string name, string password)
         {
+            DebugManager.Log(DebugCategory.TimerAuth, "Starting Register operation");
+            
             var registerResult = await _authService.Register(new RegisterRequest()
             {
                 Username = name,
@@ -82,16 +89,19 @@ namespace App.Timer.Login
 
             if (registerResult.IsSuccess)
             {
+                DebugManager.Log(DebugCategory.TimerAuth, "Registration successful, fetching current user");
                 FetchCurrentUser().Forget();
                 return;
             }
             
-            DebugManager.Log(DebugCategory.Backend, $"Register failed, {registerResult.Error}");
+            DebugManager.Log(DebugCategory.TimerAuth, $"Register failed, {registerResult.Error}");
             _authViewWindow.SetErrorText($"Register failed: {registerResult.Error}");
         }
 
         public async UniTask FetchCurrentUser()
         {
+            DebugManager.Log(DebugCategory.TimerAuth, "Starting FetchCurrentUser operation");
+            
             var result = await _authService.GetCurrentUser(_cts.Token);
 
             if (result.IsSuccess)
@@ -104,13 +114,13 @@ namespace App.Timer.Login
 
                 if (_appState.CurrentUser.Value != null && _appState.CurrentUser.Value.Equals(newUser)) return;
 
+                DebugManager.Log(DebugCategory.TimerAuth, $"Current user fetched: {result.Value.Username}, Role: {result.Value.Role}");
                 _appState.CurrentUser.Value = newUser;
             }
             else
             {
+                DebugManager.Log(DebugCategory.TimerAuth, $"Failed to fetch user, {result.Error}");
                 _appState.CurrentUser.Value = null;
-
-                DebugManager.Log(DebugCategory.Backend, $"Failed to fetch user, {result.Error}");
             }
         }
         

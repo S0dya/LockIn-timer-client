@@ -71,22 +71,33 @@ namespace App.Timer.Settings
 
         private async UniTask FetchTimerSettings()
         {
+            DebugManager.Log(DebugCategory.TimerSettings, "Fetching timer settings");
             try
             {
                 var result = await _timerSettingsService.GetTimerSettings(_cts.Token);
                 
-                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                if (!result.IsSuccess)
+                {
+                    DebugManager.Log(DebugCategory.TimerSettings, "Fetch timer settings failed");
+                    _requestErrorManager.ShowError(result.Error);
+                }
+                else
+                {
+                    DebugManager.Log(DebugCategory.TimerSettings, "Fetch timer settings successful");
+                }
 
                 SetSettingsResponse(result.Value);
             }
             catch (Exception e)
             {
+                DebugManager.Log(DebugCategory.TimerSettings, $"Fetch timer settings exception: {e.Message}");
                 _requestErrorManager.ShowError(e.Message);
             }
         }
         
         private async UniTask OpenTimerSettings()
         {
+            DebugManager.Log(DebugCategory.TimerSettings, "Preparing to open timer settings window");
             try
             {
                 using var loading = _requestLoadingManager.AddLoading();
@@ -99,11 +110,13 @@ namespace App.Timer.Settings
                     _appState.TimerSettingsState.Value.SessionsAmount);
                 var settingsData = new TimerSettingsData(durationsIndex, sessionsAmountIndex);
                 
+                DebugManager.Log(DebugCategory.TimerSettings, "Updating the TimerView");
                 _timerSettingsViewWindow.UpdateView(_appState.RunState.Value.RunStatus);
                 _windowsManager.Open<TimerSettingsViewWindow>(settingsData).Forget();
             }
             catch (Exception e)
             {
+                DebugManager.Log(DebugCategory.Backend, $"Open timer settings failed: {e.Message}");
                 _requestErrorManager.ShowError(e.Message);
             }
 
@@ -111,14 +124,14 @@ namespace App.Timer.Settings
             {
                 if (arr.Length == 0)
                 {
-                    DebugManager.Log(DebugCategory.Errors, $"Array is empty"); return -1;
+                    DebugManager.Log(DebugCategory.TimerSettings, "Settings array is empty", LogType.Error); return -1;
                 }
                 
                 var closest = arr.OrderBy(x => Math.Abs(x - value)).First();
 
                 if (Math.Abs(closest - value) > _appConfig.SettingsTolerance)
                 {
-                    DebugManager.Log(DebugCategory.Misc, $"closest value {closest} is far from {value}", LogType.Warning);
+                    DebugManager.Log(DebugCategory.TimerSettings, $"Closest value {closest} is far from {value}", LogType.Warning);
                 }
                 
                 return Array.IndexOf(arr, closest);
@@ -130,19 +143,16 @@ namespace App.Timer.Settings
             if (_appConfig.TimerSettingsDurations.Length < settingsData.DurationIndex
                 || settingsData.DurationIndex < 0)
             {
-                //log error
-                return;
-                
+                DebugManager.Log(DebugCategory.TimerSettings, "Invalid duration index", LogType.Error); return;
             }
-            //do same for amountSessions
 
             if (_appConfig.TimerSettingsDurations[settingsData.DurationIndex] == _appState.TimerSettingsState.Value.SessionDuration &&
                 _appConfig.TimerSettingsSessionsAmounts[settingsData.SessionsAmountIndex] == _appState.TimerSettingsState.Value.SessionsAmount)
             {
-                //log that they are similar to before
-
-                return;
+                DebugManager.Log(DebugCategory.TimerSettings, "Settings unchanged, skipping update"); return;
             }
+
+            DebugManager.Log(DebugCategory.TimerSettings, "Applying new timer settings");
 
             try
             {
@@ -154,12 +164,16 @@ namespace App.Timer.Settings
                     SessionsAmount = _appConfig.TimerSettingsSessionsAmounts[settingsData.SessionsAmountIndex]
                 }, _cts.Token);
 
-                if (!result.IsSuccess) _requestErrorManager.ShowError(result.Error);
+                if (!result.IsSuccess)
+                {
+                    _requestErrorManager.ShowError(result.Error); return;
+                }
                     
                 SetSettingsResponse(result.Value);
             }
             catch (Exception e)
             {
+                DebugManager.Log(DebugCategory.Backend, $"Apply settings exception: {e.Message}");
                 _requestErrorManager.ShowError(e.Message);
             }
         }
@@ -174,6 +188,7 @@ namespace App.Timer.Settings
 
             if (_appState.TimerSettingsState.Value != null && _appState.TimerSettingsState.Value.Equals(newState)) return;
 
+            DebugManager.Log(DebugCategory.TimerSettings, $"Settings updated: Duration={response.SessionDuration}, Sessions={response.SessionsAmount}");
             _appState.TimerSettingsState.Value = newState;
         }
         

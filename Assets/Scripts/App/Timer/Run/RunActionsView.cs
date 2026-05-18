@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using App.Timer.States;
 using DG.Tweening;
 using PT.Tools.Helper;
+using PT.UI.Buttons;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace App.Timer.Run
         [SerializeField] private Button[] timerSettingsButtons;
         [SerializeField] private SerializableKeyValue<RunStatus, GameObject[]> runStatusToView;
         [Space]
-        [SerializeField] private Button cancelRunButton;
+        [SerializeField] private HoldButton cancelRunButton;
         [SerializeField] private Button submitRunButton;
         [Space]
         [SerializeField] private Button[] startSessionButtons;
@@ -24,7 +25,7 @@ namespace App.Timer.Run
         [SerializeField] private float playButtonPunchScale = 1.12f;
         [SerializeField] private float playButtonAnimationDuration = 0.2f;
         [Space]
-        [SerializeField] private Button cancelSessionButton;
+        [SerializeField] private HoldButton cancelSessionButton;
         
         public event Action OnStartSession;
         public event Action OnCancelRun;
@@ -32,27 +33,23 @@ namespace App.Timer.Run
         public event Action OnCancelSession;
         public event Action OnSubmitRun;
 
-        private Dictionary<RunStatus, GameObject[]> _runStatusToView;
-
         private Tween _playButtonTween;
 
         private bool _wasPlaying;
 
         private void Start()
         {
-            _runStatusToView = runStatusToView.Dictionary;
-            
             foreach (var startSessionButton in startSessionButtons) startSessionButton.onClick.AddListener(OnStartSessionPressed);
-            cancelRunButton.onClick.AddListener(OnCancelRunPressed);
+            cancelRunButton.OnCompleted += OnCancelRunPressed;
             foreach (var timerSettingsButton in timerSettingsButtons) timerSettingsButton.onClick.AddListener(OnTimerSettingsPressed);
-            cancelSessionButton.onClick.AddListener(OnCancelSessionPressed);
+            cancelSessionButton.OnCompleted += OnCancelSessionPressed;
             submitRunButton.onClick.AddListener(OnSubmitRunPressed);
         }
 
         public void UpdateView(RunState run)
         {
-            foreach (var kvp in _runStatusToView) kvp.Value.SetActive(false);
-            _runStatusToView[run.RunStatus].SetActive(true);
+            foreach (var kvp in runStatusToView.Dictionary) kvp.Value.SetActive(false);
+            runStatusToView.Dictionary[run.RunStatus].SetActive(true);
 
             switch (run.RunStatus)
             {

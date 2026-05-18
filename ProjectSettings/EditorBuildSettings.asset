@@ -11,10 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/General/Scenes/MenuScene.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Game/General/Scenes/GameScene.unity
     guid: 8fa22983f58534246a4bac3c441a08dd
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 5c1f86c48a8db7c4cbf881b12020daf7, type: 2}
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 45afc728cac32774ab6c80606a99cd30, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 6946eaad9bbee9347b202c424f1e9f4c, type: 2}
     com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: 0aa06b32fd838e84983c5ce6fdab8007, type: 2}
