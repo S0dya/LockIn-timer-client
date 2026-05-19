@@ -1,10 +1,12 @@
-# TimerApp - Unity Client
+# LockIn - Unity Client
 
 Unity client for a session-based focus tracking application with backend synchronization.
 
 The project focuses on reactive state handling, synchronization with backend session state, and responsive UI architecture for mobile platforms.
 
-Client is designed to work with ASP.NET Core backend API.
+Client is designed to work with [ASP.NET Core backend API](https://github.com/S0dya/Timer).
+
+<img src="ReadmeSrc/LockInS.gif" width="25%"/>
 
 ---
 
@@ -105,9 +107,11 @@ Simple username/password authorization flow using JWT tokens.
 * token persistence
 * automatic session restoration
 
+<img src="ReadmeSrc/Auth.png" width="25%"/>
+
 ---
 
-## Session Flow
+## Run & Session 
 
 A session represents uninterrupted focus time.
 
@@ -121,6 +125,8 @@ The client handles:
 
 The timer UI is synchronized with backend timestamps instead of relying purely on local countdown logic.
 
+<img src="ReadmeSrc/Main.png" width="25%"/>
+
 ## Run History
 
 History is rendered as lightweight reusable UI entries designed for potentially large run lists.
@@ -132,6 +138,19 @@ Each entry displays:
 * duration
 * description
 * run consistency
+
+## Timer Settings
+
+Settings openable in any state of the application
+
+User can set :
+
+* duration
+* amount of sessions
+
+Changes are applied to the next started run, preventing changing timer settings as run is already going
+
+<img src="ReadmeSrc/Settings.png" width="25%"/>
 
 ---
 
