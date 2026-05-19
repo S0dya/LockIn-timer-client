@@ -124,7 +124,8 @@ MonoBehaviour:
     - key: 0
       value: []
     - key: 1
-      value: []
+      value:
+      - {fileID: 8489741143646062206}
     - key: 2
       value:
       - {fileID: 8489741143646062206}
