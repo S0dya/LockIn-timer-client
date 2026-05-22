@@ -10,11 +10,13 @@ namespace App
         
         private void OnApplicationPause(bool value)
         {
-            _appSynchronizationService.SynchronizeTimer().Forget();
+            if (!value)
+                _appSynchronizationService.SynchronizeTimer().Forget();
         }
         private void OnApplicationFocus(bool value)
         {
-            _appSynchronizationService.SynchronizeTimer().Forget();
+            if (value)
+                _appSynchronizationService.SynchronizeTimer().Forget();
         }
     }
 }
