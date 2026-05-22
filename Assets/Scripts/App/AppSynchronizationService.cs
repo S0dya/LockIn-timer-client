@@ -1,4 +1,5 @@
 using System;
+using App.Timer;
 using App.Timer.Login;
 using App.Timer.Run;
 using App.Timer.Settings;
@@ -18,8 +19,10 @@ namespace App
         [Inject] private RequestLoadingManager _requestLoadingManager;
         [Inject] private TimerSettingsViewModel _timerSettingsViewModel;
         [Inject] private RunViewModel _runViewModel;
+        [Inject] private AppConfig _appConfig;
 
-        private CompositeDisposable _disposables = new();
+        private readonly CompositeDisposable _disposables = new();
+        private IDisposable _autoSyncDisposable;
 
         public void Initialize()
         {
@@ -39,11 +42,13 @@ namespace App
         public async UniTask Synchronize()
         {
             DebugManager.Log(DebugCategory.Points, $"Synchronization started");
-
+            
             try
             {
                 using var loadingToken = _requestLoadingManager.AddLoading();
 
+                ResetAutoAsync();
+                
                 await _authViewModel.FetchCurrentUser();
             }
             catch
@@ -52,11 +57,13 @@ namespace App
             }
         }
 
-        private async UniTask SynchronizeTimer()
+        public async UniTask SynchronizeTimer()
         {
             try
             {
                 using var loadingToken = _requestLoadingManager.AddLoading();
+                
+                ResetAutoAsync();
                 
                 await LoadStates();
             }
@@ -75,8 +82,34 @@ namespace App
             }
         }
 
+        private void ResetAutoAsync()
+        {
+            StopAutoSync();
+            ScheduleNextSync();
+        }
+
+        private void ScheduleNextSync()
+        {
+            _autoSyncDisposable = Observable
+                .Timer(TimeSpan.FromSeconds(_appConfig.AutoSyncIntervalSeconds))
+                .Subscribe(_ =>
+                {
+                    if (_appState.CurrentUser.Value != null)
+                    {
+                        DebugManager.Log(DebugCategory.Misc, "Auto-sync triggered");
+                        SynchronizeTimer().Forget();
+                    }
+                });
+        }
+        private void StopAutoSync()
+        {
+            _autoSyncDisposable?.Dispose();
+            _autoSyncDisposable = null;
+        }
+
         public void Dispose()
         {
+            StopAutoSync();
             _disposables?.Dispose();
         }
     }

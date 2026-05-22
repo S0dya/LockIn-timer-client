@@ -87,6 +87,8 @@ namespace App.Timer.Run
 
             _runActionsView.UpdateView(run);
             _runTimerClockView.UpdateView(run.RunStatus);
+
+            _runActionsView.SetSubmitButtonInteractable(run.PlannedSessionsAmountCompletedSessions >= 1);
         }
 
         private void CurrentSessionTimeChanged(int currentTime)
@@ -118,15 +120,9 @@ namespace App.Timer.Run
         
         private void OnRunSubmit(string description)
         {
-            DebugManager.Log(DebugCategory.TimerRun, "Submitting run with description");
-            _runService.FinishRun(new RunFinishRequest()
-            {
-                RunDescription = description,
-            }).Forget();
-            
-            FetchRun().Forget();
-            
-            OnCloseSubmitRun();
+            if (_appState.RunState.Value.PlannedSessionsAmountCompletedSessions <= 0) return;
+
+            SubmitRun(description).Forget();
         }
         private void OnCloseSubmitRun()
         {
@@ -286,7 +282,7 @@ namespace App.Timer.Run
                 if (!result.IsSuccess)
                 {
                     DebugManager.Log(DebugCategory.TimerRun, "Finish session failed");
-                    _requestErrorManager.ShowError($"{result.Error}");
+                    _requestErrorManager.ShowError($"{result.Error}", false);
                     return;
                 }
 
@@ -302,7 +298,7 @@ namespace App.Timer.Run
             catch (Exception e)
             {
                 DebugManager.Log(DebugCategory.Backend, $"TryFinishSession failed with exception: {e.Message}");
-                _requestErrorManager.ShowError($"Failed to finish session: {e.Message}");
+                _requestErrorManager.ShowError($"Failed to finish session: {e.Message}", false);
             }
         }
 
@@ -389,6 +385,38 @@ namespace App.Timer.Run
             finally
             {
                 _isOperationInProgress = false;
+            }
+        }
+
+        private async UniTask SubmitRun(string description = "")
+        {
+            DebugManager.Log(DebugCategory.TimerRun, $"Submitting run with description: {description}");
+
+            using var cts = new CancellationTokenSource();
+            try
+            {
+                using var loadingToken = _requestLoadingManager.AddLoading();
+
+                var result = await _runService.FinishRun(new RunFinishRequest()
+                {
+                    RunDescription = description,
+                }, cts.Token);
+
+                if (result.IsSuccess)
+                {
+                    FetchRun().Forget();
+
+                    OnCloseSubmitRun();
+                }
+                else
+                {
+                    _requestErrorManager.ShowError(result.Error);
+                }
+            }
+            catch (Exception e)
+            {
+                DebugManager.Log(DebugCategory.Backend, $"SubmitRun failed with exception: {e.Message}");
+                _requestErrorManager.ShowError($"Failed to submit run: {e.Message}");
             }
         }
         

@@ -904,6 +904,7 @@ GameObject:
   - component: {fileID: 1401206812}
   - component: {fileID: 1401206813}
   - component: {fileID: 1401206814}
+  - component: {fileID: 1401206815}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -983,6 +984,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a637102b0bc3459983bdda1df770c5d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::App.AppInstaller
+--- !u!114 &1401206815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401206809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8211cf24340e4a269d013ba1e7aec465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::App.AppFocusSynchronization
 --- !u!224 &1469400613 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3826678267622300870, guid: 5de1561bce841cb4abb726241c112d73, type: 3}

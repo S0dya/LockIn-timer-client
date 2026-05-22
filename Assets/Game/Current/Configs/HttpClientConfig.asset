@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8536de26f60944759f219ce48e42363d, type: 3}
   m_Name: HttpClientConfig
   m_EditorClassIdentifier: Assembly-CSharp::PT.Tools.Http.HttpClientConfig
-  baseUrl: https://unquote-unbraided-stylishly.ngrok-free.dev
+  baseUrl: https://lockin-timer-backend.onrender.com
   timeoutSeconds: 5
+  retryIntervalSeconds: 5
+  manualRetryCooldownSeconds: 3

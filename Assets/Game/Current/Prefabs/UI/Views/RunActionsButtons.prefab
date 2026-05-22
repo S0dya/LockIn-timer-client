@@ -259,6 +259,7 @@ MonoBehaviour:
       - {fileID: 4896855217930777802}
   cancelRunButton: {fileID: 3132103950076884012}
   submitRunButton: {fileID: 3537055251176471790}
+  submitRunCg: {fileID: 5958849530127215762}
   startSessionButtons:
   - {fileID: 0}
   - {fileID: 0}
@@ -546,7 +547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4581972139998177723, guid: 087293827e9c14546a17009d6ca32ee2, type: 3}
       propertyPath: m_Name
-      value: ApplyButton
+      value: SubmitButton
       objectReference: {fileID: 0}
     - target: {fileID: 6247481945903555889, guid: 087293827e9c14546a17009d6ca32ee2, type: 3}
       propertyPath: m_Pivot.x
@@ -647,6 +648,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!225 &5958849530127215762 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 7417224508875633608, guid: 087293827e9c14546a17009d6ca32ee2, type: 3}
+  m_PrefabInstance: {fileID: 3773260535104413530}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7128868140311214699 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6247481945903555889, guid: 087293827e9c14546a17009d6ca32ee2, type: 3}

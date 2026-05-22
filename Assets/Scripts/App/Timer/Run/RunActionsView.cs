@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using App.Timer.States;
 using DG.Tweening;
 using PT.Tools.Helper;
 using PT.UI.Buttons;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +10,12 @@ namespace App.Timer.Run
 {
     public class RunActionsView : MonoBehaviour
     {
-        [Header("General")]
         [SerializeField] private Button[] timerSettingsButtons;
         [SerializeField] private SerializableKeyValue<RunStatus, GameObject[]> runStatusToView;
         [Space]
         [SerializeField] private HoldButton cancelRunButton;
         [SerializeField] private Button submitRunButton;
+        [SerializeField] private CanvasGroup submitRunCg;
         [Space]
         [SerializeField] private Button[] startSessionButtons;
         [Space]
@@ -44,6 +42,8 @@ namespace App.Timer.Run
             foreach (var timerSettingsButton in timerSettingsButtons) timerSettingsButton.onClick.AddListener(OnTimerSettingsPressed);
             cancelSessionButton.OnCompleted += OnCancelSessionPressed;
             submitRunButton.onClick.AddListener(OnSubmitRunPressed);
+            
+            foreach (var kvp in runStatusToView.Dictionary) kvp.Value.SetActive(false);
         }
 
         public void UpdateView(RunState run)
@@ -67,6 +67,11 @@ namespace App.Timer.Run
                     playButtonTransform.localScale = Vector3.one;
                     break;
             }
+        }
+
+        public void SetSubmitButtonInteractable(bool isInteractable)
+        {
+            submitRunCg.interactable = isInteractable;
         }
         
         private void PlayButtonPressedAnimation()

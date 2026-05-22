@@ -19,7 +19,7 @@ namespace App.Timer.Windows
             _requestErrorWindow.OnClose += ManualClose;
         }
         
-        public void ShowError(string errorMessage)
+        public void ShowError(string errorMessage, bool autoClose = true)
         {
             if (string.IsNullOrEmpty(errorMessage))
             {
@@ -27,7 +27,7 @@ namespace App.Timer.Windows
             }
             
             _windowsManager.Open<RequestErrorWindow>(errorMessage).Forget();
-            StartAutoClose();
+            if (autoClose) StartAutoClose();
         }
         
         private void StartAutoClose()
