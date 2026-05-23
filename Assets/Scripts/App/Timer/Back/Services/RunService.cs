@@ -8,99 +8,76 @@ using Zenject;
 
 namespace App.Timer.Back.Services
 {
-    public class RunService
+    public class RunService : BaseService
     {
         [Inject] private readonly IRunApi _api;
 
+        private readonly Dictionary<int, RunHistoryResponse> _cachedRunHistory = new();
+        
         public async UniTask<Result<SessionStartResponse>> StartSession(CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.StartSession(cancellationToken);
-                return Result<SessionStartResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<SessionStartResponse>.Fail("Failed to start session");
-            }
+            return await Execute(_api.StartSession(cancellationToken), "Failed to start session");
         }
 
         public async UniTask<Result<SessionFinishedResponse>> FinishSession(CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.FinishSession(cancellationToken);
-                return Result<SessionFinishedResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<SessionFinishedResponse>.Fail("Failed to finish session");
-            }
+            return await Execute(_api.FinishSession(cancellationToken), "Failed to finish session");
         }
 
         public async UniTask<Result<CancelSessionResponse>> CancelSession(CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.CancelSession(cancellationToken);
-                return Result<CancelSessionResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<CancelSessionResponse>.Fail("Failed to cancel session");
-            }
+            return await Execute(_api.CancelSession(cancellationToken), "Failed to cancel session");
         }
 
         public async UniTask<Result<RunFinishResponse>> FinishRun(RunFinishRequest request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.FinishRun(request, cancellationToken);
-                return Result<RunFinishResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<RunFinishResponse>.Fail("Failed to finish run");
-            }
+            var result = await Execute(_api.FinishRun(request, cancellationToken), "Failed to finish run");
+            
+            if (result.IsSuccess)
+                _cachedRunHistory.Clear();
+
+            return result;
         }
 
         public async UniTask<Result<CancelRunResponse>> CancelRun(CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.CancelRun(cancellationToken);
-                return Result<CancelRunResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<CancelRunResponse>.Fail("Failed to cancel run");
-            }
+            return await Execute(_api.CancelRun(cancellationToken), "Failed to cancel run");
         }
 
         public async UniTask<Result<CurrentRunResponse>> GetCurrentRun(CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.GetCurrentRun(cancellationToken);
-                return Result<CurrentRunResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<CurrentRunResponse>.Fail("Failed to get current run");
-            }
+            return await Execute(_api.GetCurrentRun(cancellationToken), "Failed to get current run");
         }
 
         public async UniTask<Result<List<RunHistoryResponse>>> GetRunHistory(RunHistoryRequest request, CancellationToken cancellationToken = default)
         {
-            try
+            var isFullyCached = true;
+
+            for (int i = request.Offset; i < request.Offset + request.Limit; i++)
             {
-                var response = await _api.GetRunHistory(request, cancellationToken);
-                return Result<List<RunHistoryResponse>>.Success(response);
+                if (_cachedRunHistory.ContainsKey(i)) continue;
+
+                isFullyCached = false;
+                break;
             }
-            catch
+                
+            if (isFullyCached)
             {
-                return Result<List<RunHistoryResponse>>.Fail("Failed to get run history");
+                var cachedRunHistory = new List<RunHistoryResponse>();
+                for (int i = request.Offset; i < request.Offset + request.Limit; i++) 
+                    cachedRunHistory.Add(_cachedRunHistory[i]);
+                    
+                return Result<List<RunHistoryResponse>>.Success(cachedRunHistory);
             }
+            
+            var result = await Execute(_api.GetRunHistory(request, cancellationToken), "Failed to get run history");
+
+            if (!result.IsSuccess) return result;
+            
+            for (int i = 0; i < result.Value.Count; i++)
+                _cachedRunHistory[request.Offset + i] = result.Value[i];
+
+            return result;
         }
     }
 }

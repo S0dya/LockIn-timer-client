@@ -16,6 +16,7 @@ namespace App.Timer
         [SerializeField] int defaultTimerSettingsSessionsAmount = 2;
         [Space]
         [SerializeField] int autoSyncIntervalSeconds = 60;
+        [SerializeField] int manualSyncOffsetSeconds = 300;
         
         public int[] TimerSettingsDurations => timerSettingsDurations;
         public int[] TimerSettingsSessionsAmounts => timerSettingsSessionsAmounts;
@@ -27,5 +28,6 @@ namespace App.Timer
         public int DefaultTimerSettingsSessionsAmount => defaultTimerSettingsSessionsAmount;
         
         public int AutoSyncIntervalSeconds => autoSyncIntervalSeconds;
+        public int ManualSyncOffsetSeconds => manualSyncOffsetSeconds;
     }
 }

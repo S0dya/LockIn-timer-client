@@ -24,6 +24,8 @@ namespace App
         private readonly CompositeDisposable _disposables = new();
         private IDisposable _autoSyncDisposable;
 
+        private DateTime _lastAvailableManualSyncStamp;
+
         public void Initialize()
         {
             _appState.CurrentUser
@@ -39,6 +41,14 @@ namespace App
             SynchronizeTimer().Forget();
         }
 
+        public void FocusSynchronize()
+        {
+            if ((DateTime.UtcNow - _lastAvailableManualSyncStamp).TotalSeconds < _appConfig.ManualSyncOffsetSeconds) return;
+            _lastAvailableManualSyncStamp = DateTime.UtcNow;
+            
+            SynchronizeTimer().Forget();
+        }
+
         public async UniTask Synchronize()
         {
             DebugManager.Log(DebugCategory.Points, $"Synchronization started");
@@ -47,7 +57,7 @@ namespace App
             {
                 using var loadingToken = _requestLoadingManager.AddLoading();
 
-                ResetAutoAsync();
+                ResetSync();
                 
                 await _authViewModel.FetchCurrentUser();
             }
@@ -57,13 +67,13 @@ namespace App
             }
         }
 
-        public async UniTask SynchronizeTimer()
+        private async UniTask SynchronizeTimer()
         {
             try
             {
                 using var loadingToken = _requestLoadingManager.AddLoading();
                 
-                ResetAutoAsync();
+                ResetSync();
                 
                 await LoadStates();
             }
@@ -82,8 +92,10 @@ namespace App
             }
         }
 
-        private void ResetAutoAsync()
+        private void ResetSync()
         {
+            _lastAvailableManualSyncStamp = DateTime.UtcNow;
+            
             StopAutoSync();
             ScheduleNextSync();
         }

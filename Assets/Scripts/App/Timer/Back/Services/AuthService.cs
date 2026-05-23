@@ -8,41 +8,29 @@ using Zenject;
 
 namespace App.Timer.Back.Services
 {
-    public class AuthService
+    public class AuthService : BaseService
     {
         [Inject] private readonly IAuthApi _api;
         [Inject] private readonly IAuthStorage _authStorage;
 
         public async UniTask<Result<AuthResponse>> Login(LoginRequest request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.Login(request, cancellationToken);
-                
-                _authStorage.SetToken(response.Token);
+            var result = await Execute(_api.Login(request, cancellationToken), "Failed to login");
+            
+            if (result.IsSuccess)
+                _authStorage.SetToken(result.Value.Token);
 
-                return Result<AuthResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<AuthResponse>.Fail("Failed to login");
-            }
+            return result;
         }
 
         public async UniTask<Result<AuthResponse>> Register(RegisterRequest request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await _api.Register(request, cancellationToken);
-                
-                _authStorage.SetToken(response.Token);
+            var result = await Execute(_api.Register(request, cancellationToken), "Failed to register");
+            
+            if (result.IsSuccess)
+                _authStorage.SetToken(result.Value.Token);
 
-                return Result<AuthResponse>.Success(response);
-            }
-            catch
-            {
-                return Result<AuthResponse>.Fail("Failed to register");
-            }
+            return result;
         }
         public async UniTask<Result<UserResponse>> GetCurrentUser(CancellationToken cancellationToken = default)
         {
@@ -50,16 +38,12 @@ namespace App.Timer.Back.Services
 
             if (String.IsNullOrEmpty(token)) return Result<UserResponse>.Fail("Token is null");
 
-            try
-            {
-                var response = await _api.GetCurrentUser(cancellationToken);
-                return Result<UserResponse>.Success(response);
-            }
-            catch
-            {
+            var result = await Execute(_api.GetCurrentUser(cancellationToken), "Failed to get current user");
+            
+            if (!result.IsSuccess) 
                 _authStorage.Clear();
-                return Result<UserResponse>.Fail("Token is null");
-            }
+
+            return result;
         }
     }
 }

@@ -104,6 +104,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -166,6 +167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7775739292143802183}
   - component: {fileID: 8265423251487314882}
+  - component: {fileID: 6222701744929576006}
   m_Layer: 0
   m_Name: RequestLoadingWindow
   m_TagString: Untagged
@@ -207,6 +209,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::App.Timer.Windows.RequestLoadingWindow
   rotatingObj: {fileID: 2343616873733596839}
+  canvasGroup: {fileID: 6222701744929576006}
+  fadeDelay: 0.1
+  fadeDuration: 0.15
+--- !u!225 &6222701744929576006
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980048850458336714}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2201314772573304294
 GameObject:
   m_ObjectHideFlags: 0
