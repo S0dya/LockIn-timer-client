@@ -17,6 +17,11 @@ namespace App.Timer
         [Space]
         [SerializeField] int autoSyncIntervalSeconds = 60;
         [SerializeField] int manualSyncOffsetSeconds = 300;
+        [Space]
+        [SerializeField] private int cacheTimerSettingsDurationSeconds = 300;
+        [SerializeField] private int cacheRunHistoryDurationSeconds = 600;
+        [Space]
+        [SerializeField] private int runHistoryLimit = 10;
         
         public int[] TimerSettingsDurations => timerSettingsDurations;
         public int[] TimerSettingsSessionsAmounts => timerSettingsSessionsAmounts;
@@ -29,5 +34,10 @@ namespace App.Timer
         
         public int AutoSyncIntervalSeconds => autoSyncIntervalSeconds;
         public int ManualSyncOffsetSeconds => manualSyncOffsetSeconds;
+        
+        public int CacheTimerSettingsDurationSeconds => cacheTimerSettingsDurationSeconds;
+        public int CacheRunHistoryDurationSeconds => cacheRunHistoryDurationSeconds;
+        
+        public int RunHistoryLimit => runHistoryLimit;
     }
 }

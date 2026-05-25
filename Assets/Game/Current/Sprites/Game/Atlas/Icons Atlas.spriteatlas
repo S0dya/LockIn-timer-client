@@ -44,15 +44,21 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 2a9037c2350d3ad49a80461e5a6294a1, type: 3}
     - {fileID: 2800000, guid: 84d5581722cb2f1489a8002d7eceba02, type: 3}
     - {fileID: 2800000, guid: 79dcd9bc631ce9b47b7a01d07ebbc06d, type: 3}
+    - {fileID: 2800000, guid: 9b43f2290b1b062428651e211458f425, type: 3}
+    - {fileID: 2800000, guid: 71d59d90f9469bf44a93875c724d6530, type: 3}
+    - {fileID: 2800000, guid: 56b16f84e55cb924cb00cc4470a69243, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 2db19860e75fec54b9dc2c6d0c72f2cc: 6136400503616805991
+    - 71d59d90f9469bf44a93875c724d6530: 21300000
     - 30bd3501ca2811f4d858b1b97e72674a: 21300000
     - 6ad7bd5237c0db34fb2828c771305ab2: 21300000
     - 2a9037c2350d3ad49a80461e5a6294a1: 21300000
+    - 56b16f84e55cb924cb00cc4470a69243: 21300000
     - 84d5581722cb2f1489a8002d7eceba02: 21300000
+    - 9b43f2290b1b062428651e211458f425: 21300000
     - 72ecbd1af89f4e3498d11d693227ea34: 21300000
     - ddd37ecae988d3a4a8981ece309094fd: 2028145815805844585
     - 79dcd9bc631ce9b47b7a01d07ebbc06d: 21300000
@@ -63,10 +69,13 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 6136400503616805991, guid: 2db19860e75fec54b9dc2c6d0c72f2cc, type: 3}
+  - {fileID: 21300000, guid: 71d59d90f9469bf44a93875c724d6530, type: 3}
   - {fileID: 21300000, guid: 30bd3501ca2811f4d858b1b97e72674a, type: 3}
   - {fileID: 21300000, guid: 6ad7bd5237c0db34fb2828c771305ab2, type: 3}
   - {fileID: 21300000, guid: 2a9037c2350d3ad49a80461e5a6294a1, type: 3}
+  - {fileID: 21300000, guid: 56b16f84e55cb924cb00cc4470a69243, type: 3}
   - {fileID: 21300000, guid: 84d5581722cb2f1489a8002d7eceba02, type: 3}
+  - {fileID: 21300000, guid: 9b43f2290b1b062428651e211458f425, type: 3}
   - {fileID: 21300000, guid: 72ecbd1af89f4e3498d11d693227ea34, type: 3}
   - {fileID: 2028145815805844585, guid: ddd37ecae988d3a4a8981ece309094fd, type: 3}
   - {fileID: 21300000, guid: 79dcd9bc631ce9b47b7a01d07ebbc06d, type: 3}
@@ -76,10 +85,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d07f40ff48843374c812b41921cfae1e, type: 3}
   m_PackedSpriteNamesToIndex:
   - description_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48_0
+  - calendar_today_48dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
   - arrow_forward_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
   - Minus
   - Plus
+  - done_outline_48dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
   - visibility_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
+  - alarm_48dp_E3E3E3_FILL0_wght400_GRAD0_opsz48
   - Error
   - flag_2_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48_0
   - visibility_off_96dp_E3E3E3_FILL0_wght400_GRAD0_opsz48

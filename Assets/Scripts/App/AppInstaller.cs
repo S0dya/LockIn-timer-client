@@ -7,6 +7,7 @@ using App.Timer.Login;
 using App.Timer.Settings;
 using App.Timer.Run;
 using App.Timer.Back.Config;
+using App.Timer.Run.History;
 using PT.Tools.Http;
 using UnityEngine;
 using Zenject;
@@ -28,6 +29,7 @@ namespace App
             
             Container.BindInterfacesAndSelfTo<AuthViewModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<RunViewModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RunHistoryViewModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<TimerSettingsViewModel>().AsSingle();
             
             Container.Bind<IAuthApi>().To<AuthApi>().AsSingle();
@@ -46,6 +48,7 @@ namespace App
             Container.Bind<AuthViewWindow>().FromComponentInHierarchy().AsSingle();
             Container.Bind<RequestErrorWindow>().FromComponentInHierarchy().AsSingle();
             Container.Bind<InternetConnectionWindow>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<RunHistoryWindow>().FromComponentInHierarchy().AsSingle();
         }
     }
 }

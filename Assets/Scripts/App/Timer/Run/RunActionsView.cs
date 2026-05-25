@@ -24,12 +24,15 @@ namespace App.Timer.Run
         [SerializeField] private float playButtonAnimationDuration = 0.2f;
         [Space]
         [SerializeField] private HoldButton cancelSessionButton;
+        [Space]
+        [SerializeField] private Button runHistoryButton;
         
         public event Action OnStartSession;
         public event Action OnCancelRun;
         public event Action OnTimerSettings;
         public event Action OnCancelSession;
         public event Action OnSubmitRun;
+        public event Action OnOpenHistory;
 
         private Tween _playButtonTween;
 
@@ -42,6 +45,7 @@ namespace App.Timer.Run
             foreach (var timerSettingsButton in timerSettingsButtons) timerSettingsButton.onClick.AddListener(OnTimerSettingsPressed);
             cancelSessionButton.OnCompleted += OnCancelSessionPressed;
             submitRunButton.onClick.AddListener(OnSubmitRunPressed);
+            runHistoryButton.onClick.AddListener(OnOpenHistoryPressed);
             
             foreach (var kvp in runStatusToView.Dictionary) kvp.Value.SetActive(false);
         }
@@ -109,6 +113,11 @@ namespace App.Timer.Run
         private void OnSubmitRunPressed()
         {
             OnSubmitRun?.Invoke();
+        }
+        
+        private void OnOpenHistoryPressed()
+        {
+            OnOpenHistory?.Invoke();
         }
 
         private void OnDestroy()

@@ -1,3 +1,4 @@
+using System;
 using App.Timer.Back.Api;
 using App.Timer.Back.Models;
 using Cysharp.Threading.Tasks;
@@ -11,8 +12,10 @@ namespace App.Timer.Back.Services
     public class RunService : BaseService
     {
         [Inject] private readonly IRunApi _api;
+        [Inject] private readonly AppConfig _appConfig;
 
         private readonly Dictionary<int, RunHistoryResponse> _cachedRunHistory = new();
+        private DateTime _cachedRunHistoryTimestamp;
         
         public async UniTask<Result<SessionStartResponse>> StartSession(CancellationToken cancellationToken = default)
         {
@@ -32,7 +35,7 @@ namespace App.Timer.Back.Services
         public async UniTask<Result<RunFinishResponse>> FinishRun(RunFinishRequest request, CancellationToken cancellationToken = default)
         {
             var result = await Execute(_api.FinishRun(request, cancellationToken), "Failed to finish run");
-            
+
             if (result.IsSuccess)
                 _cachedRunHistory.Clear();
 
@@ -51,23 +54,32 @@ namespace App.Timer.Back.Services
 
         public async UniTask<Result<List<RunHistoryResponse>>> GetRunHistory(RunHistoryRequest request, CancellationToken cancellationToken = default)
         {
-            var isFullyCached = true;
-
-            for (int i = request.Offset; i < request.Offset + request.Limit; i++)
+            var cacheExpired = DateTime.UtcNow - _cachedRunHistoryTimestamp > TimeSpan.FromSeconds(_appConfig.CacheRunHistoryDurationSeconds);
+            
+            if (cacheExpired)
             {
-                if (_cachedRunHistory.ContainsKey(i)) continue;
-
-                isFullyCached = false;
-                break;
+                _cachedRunHistory.Clear();
             }
-                
-            if (isFullyCached)
+            else
             {
-                var cachedRunHistory = new List<RunHistoryResponse>();
-                for (int i = request.Offset; i < request.Offset + request.Limit; i++) 
-                    cachedRunHistory.Add(_cachedRunHistory[i]);
+                var isFullyCached = true;
+
+                for (int i = request.Offset; i < request.Offset + request.Limit; i++)
+                {
+                    if (_cachedRunHistory.ContainsKey(i)) continue;
+
+                    isFullyCached = false;
+                    break;
+                }
+                
+                if (isFullyCached)
+                {
+                    var cachedRunHistory = new List<RunHistoryResponse>();
+                    for (int i = request.Offset; i < request.Offset + request.Limit; i++) 
+                        cachedRunHistory.Add(_cachedRunHistory[i]);
                     
-                return Result<List<RunHistoryResponse>>.Success(cachedRunHistory);
+                    return Result<List<RunHistoryResponse>>.Success(cachedRunHistory);
+                }   
             }
             
             var result = await Execute(_api.GetRunHistory(request, cancellationToken), "Failed to get run history");
@@ -76,6 +88,8 @@ namespace App.Timer.Back.Services
             
             for (int i = 0; i < result.Value.Count; i++)
                 _cachedRunHistory[request.Offset + i] = result.Value[i];
+            
+            _cachedRunHistoryTimestamp = DateTime.UtcNow;
 
             return result;
         }

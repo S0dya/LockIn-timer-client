@@ -3,6 +3,7 @@ using System.Threading;
 using App.Timer.Back.Models;
 using App.Timer.Back.Services;
 using App.Timer.States;
+using App.Timer.Windows;
 using Cysharp.Threading.Tasks;
 using PT.Tools.Debugging;
 using PT.Tools.Windows;
@@ -16,6 +17,7 @@ namespace App.Timer.Login
         [Inject] private AppState _appState;
         [Inject] private AuthViewWindow _authViewWindow;
         [Inject] private AuthService _authService;
+        [Inject] private RequestLoadingManager _requestLoadingManager;
         [Inject (Id = "Menu")] private WindowsManager _windowsManager;
         
         private readonly CancellationTokenSource _cts = new();
@@ -59,43 +61,53 @@ namespace App.Timer.Login
         private async UniTask TryLogin(string name, string password)
         {
             DebugManager.Log(DebugCategory.TimerAuth, "Starting Login operation");
-            
-            var loginResult = await _authService.Login(new LoginRequest()
-            {
-                Username = name,
-                Password = password
-            }, _cts.Token);
 
-            if (loginResult.IsSuccess)
+            try
             {
-                DebugManager.Log(DebugCategory.TimerAuth, "Login successful, fetching current user");
-                FetchCurrentUser().Forget();
-                return;
+                var loginResult = await _authService.Login(new LoginRequest()
+                {
+                    Username = name,
+                    Password = password
+                }, _cts.Token);
+
+                if (loginResult.IsSuccess)
+                {
+                    DebugManager.Log(DebugCategory.TimerAuth, "Login successful, fetching current user");
+                    FetchCurrentUser().Forget();
+                }
             }
-            
-            DebugManager.Log(DebugCategory.TimerAuth, "Login failed");
-            _authViewWindow.SetErrorText($"Login failed: {loginResult.Error}");
+            catch (Exception e)
+            {
+                DebugManager.Log(DebugCategory.TimerAuth, "Login failed");
+                _authViewWindow.SetErrorText($"Login failed: {e.Message}");
+            }
         }
 
         private async UniTask TryRegister(string name, string password)
         {
             DebugManager.Log(DebugCategory.TimerAuth, "Starting Register operation");
-            
-            var registerResult = await _authService.Register(new RegisterRequest()
-            {
-                Username = name,
-                Password = password
-            }, _cts.Token);
 
-            if (registerResult.IsSuccess)
+            try
             {
-                DebugManager.Log(DebugCategory.TimerAuth, "Registration successful, fetching current user");
-                FetchCurrentUser().Forget();
-                return;
+                using var loadingToken =_requestLoadingManager.AddLoading();
+                
+                var registerResult = await _authService.Register(new RegisterRequest()
+                {
+                    Username = name,
+                    Password = password
+                }, _cts.Token);
+                
+                if (registerResult.IsSuccess)
+                {
+                    DebugManager.Log(DebugCategory.TimerAuth, "Registration successful, fetching current user");
+                    FetchCurrentUser().Forget();
+                }
             }
-            
-            DebugManager.Log(DebugCategory.TimerAuth, $"Register failed, {registerResult.Error}");
-            _authViewWindow.SetErrorText($"Register failed: {registerResult.Error}");
+            catch (Exception e)
+            {
+                DebugManager.Log(DebugCategory.TimerAuth, $"Register failed: {e.Message}");
+                _authViewWindow.SetErrorText($"Register failed: {e.Message}");
+            }
         }
 
         public async UniTask FetchCurrentUser()
@@ -106,6 +118,8 @@ namespace App.Timer.Login
 
             if (result.IsSuccess)
             {
+                using var loadingToken =_requestLoadingManager.AddLoading();
+                
                 var newUser = new UserState()
                 {
                     Username = result.Value.Username,
