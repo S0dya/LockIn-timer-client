@@ -48,7 +48,7 @@ namespace PT.UI.Windows
             _loadingManager.LoadSteps(new()
             {
                 _loadingManager.GetSceneUnloadingStep(SceneNameEnum.Game),
-                _loadingManager.GetSceneLoadingStep(SceneNameEnum.Menu),
+                _loadingManager.GetSceneLoadingStep(SceneNameEnum.App),
             }).Forget();
 
             _windowsManager.Close<PauseWindow>().Forget();

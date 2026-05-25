@@ -902,7 +902,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1401206810}
   - component: {fileID: 1401206812}
-  - component: {fileID: 1401206813}
   - component: {fileID: 1401206814}
   - component: {fileID: 1401206815}
   m_Layer: 0
@@ -941,7 +940,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 1401206813}
   - {fileID: 1401206814}
   _installerPrefabs: []
   _autoRun: 1
@@ -960,18 +958,6 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
---- !u!114 &1401206813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401206809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbcddc5f8a224b49978a146fdb6d605c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1401206814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,6 +1030,10 @@ PrefabInstance:
     - target: {fileID: 1980048850458336714, guid: 32cecb662924651469198a33a0a6a2ef, type: 3}
       propertyPath: m_Name
       value: RunHistoryWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 7429211606204504038, guid: 32cecb662924651469198a33a0a6a2ef, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7775739292143802183, guid: 32cecb662924651469198a33a0a6a2ef, type: 3}
       propertyPath: m_Pivot.x

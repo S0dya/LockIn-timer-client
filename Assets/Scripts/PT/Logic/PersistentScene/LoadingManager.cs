@@ -15,7 +15,7 @@ namespace PT.Logic.PersistentScene
 {
     public enum SceneNameEnum
     {
-        Menu = 1, 
+        App = 1, 
         Game = 2,
     }
 

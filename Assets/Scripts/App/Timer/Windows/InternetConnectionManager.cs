@@ -20,7 +20,7 @@ namespace App.Timer.Windows
         [Inject] private IHttpClient _httpClient;
         [Inject] private ApiConfig _apiConfig;
         [Inject] private HttpClientConfig _httpClientConfig;
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
 
         private readonly CompositeDisposable _disposables = new();
         

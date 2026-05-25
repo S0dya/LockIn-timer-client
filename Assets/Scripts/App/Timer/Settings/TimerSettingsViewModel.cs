@@ -24,7 +24,7 @@ namespace App.Timer.Settings
         [Inject] private TimerSettingsService _timerSettingsService;
         [Inject] private TimerSettingsViewWindow _timerSettingsViewWindow;
         [Inject] private RunActionsView _runActionsView;
-        [Inject (Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
 
         private int _currentDurationIndex;
         private int _currentSessionsAmountIndex;

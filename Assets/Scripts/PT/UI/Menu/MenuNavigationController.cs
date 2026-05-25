@@ -31,7 +31,7 @@ namespace PT.UI.Menu
     {
         [SerializeField] private WindowInfo[] windowInfos;
 
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private void Awake()
         {

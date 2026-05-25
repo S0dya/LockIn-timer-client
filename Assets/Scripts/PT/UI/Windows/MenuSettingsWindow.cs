@@ -11,7 +11,7 @@ namespace PT.UI.Windows
     {
         [SerializeField] private Button closeButton;
         
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         [Inject] private SaveManager _saveManager;
         
         private void Awake()

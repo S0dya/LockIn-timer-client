@@ -10,7 +10,7 @@ namespace App.Timer.Windows
     public class RequestErrorManager : IInitializable, IDisposable
     {
         [Inject] private RequestErrorWindow _requestErrorWindow;
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private CancellationTokenSource _cts;
         

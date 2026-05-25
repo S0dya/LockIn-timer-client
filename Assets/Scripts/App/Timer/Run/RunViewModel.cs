@@ -24,7 +24,7 @@ namespace App.Timer.Run
         [Inject] private SessionFinishedViewWindow _sessionFinishedViewWindow;
         [Inject] private RunTimerClockView _runTimerClockView;
         [Inject] private RunActionsView _runActionsView;
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         [Inject] private RequestLoadingManager _requestLoadingManager;
         [Inject] private RequestErrorManager _requestErrorManager;
         

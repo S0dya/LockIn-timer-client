@@ -88,7 +88,7 @@ namespace PT.Logic.Dependency.ProjectContext
             {
                 _loadingManager.LoadSteps(new()
                 {
-                    _loadingManager.GetSceneLoadingStep(SceneNameEnum.Menu),
+                    _loadingManager.GetSceneLoadingStep(SceneNameEnum.App),
                     new FakeWaitingStep(0.1f)
                 }).Forget();
             }

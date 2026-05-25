@@ -102,7 +102,7 @@ namespace PT.Tools.Leaderboard.Game
             _loadingManager.LoadSteps(new()
             {
                 _loadingManager.GetSceneUnloadingStep(SceneNameEnum.Game),
-                _loadingManager.GetSceneLoadingStep(SceneNameEnum.Menu)
+                _loadingManager.GetSceneLoadingStep(SceneNameEnum.App)
             }).Forget();
         }
 

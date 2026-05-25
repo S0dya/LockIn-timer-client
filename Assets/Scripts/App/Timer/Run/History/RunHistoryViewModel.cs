@@ -20,7 +20,7 @@ namespace App.Timer.Run.History
         [Inject] private RequestLoadingManager _requestLoadingManager;
         [Inject] private RequestErrorManager _requestErrorManager;
         [Inject] private RunHistoryWindow _runHistoryWindow;
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private int _currentOffset;
         private bool _isLoading;

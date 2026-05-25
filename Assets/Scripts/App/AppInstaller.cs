@@ -1,4 +1,3 @@
-using App.Timer;
 using App.Timer.Back.Api;
 using App.Timer.States;
 using App.Timer.Windows;
@@ -6,10 +5,8 @@ using App.Timer.Back.Services;
 using App.Timer.Login;
 using App.Timer.Settings;
 using App.Timer.Run;
-using App.Timer.Back.Config;
 using App.Timer.Run.History;
-using PT.Tools.Http;
-using UnityEngine;
+using PT.Tools.Windows;
 using Zenject;
 
 namespace App
@@ -18,6 +15,8 @@ namespace App
     {
         public override void InstallBindings()
         {
+            Container.Bind<WindowsManager>().WithId("App").FromComponentInHierarchy().AsSingle();
+         
             Container.BindInterfacesAndSelfTo<AppBootstrapper>().AsSingle();
             Container.BindInterfacesAndSelfTo<AppSynchronizationService>().AsSingle();
             

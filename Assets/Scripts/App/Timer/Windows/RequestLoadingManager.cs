@@ -10,7 +10,7 @@ namespace App.Timer.Windows
 {
     public class RequestLoadingManager : IInitializable
     {
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private readonly HashSet<IDisposable> _loadingQueue = new();
         

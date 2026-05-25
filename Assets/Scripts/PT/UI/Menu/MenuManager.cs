@@ -9,7 +9,7 @@ namespace PT.UI.Menu
     {
         [SerializeField] private Button playLevelButton;
 
-        [Inject(Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private void Awake()
         {

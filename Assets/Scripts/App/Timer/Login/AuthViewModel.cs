@@ -18,7 +18,7 @@ namespace App.Timer.Login
         [Inject] private AuthViewWindow _authViewWindow;
         [Inject] private AuthService _authService;
         [Inject] private RequestLoadingManager _requestLoadingManager;
-        [Inject (Id = "Menu")] private WindowsManager _windowsManager;
+        [Inject(Id = "App")] private WindowsManager _windowsManager;
         
         private readonly CancellationTokenSource _cts = new();
 
