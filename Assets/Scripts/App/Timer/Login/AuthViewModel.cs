@@ -64,6 +64,8 @@ namespace App.Timer.Login
 
             try
             {
+                using var loadingToken =_requestLoadingManager.AddLoading();
+
                 var loginResult = await _authService.Login(new LoginRequest()
                 {
                     Username = name,
