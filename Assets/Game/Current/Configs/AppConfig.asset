@@ -19,7 +19,7 @@ MonoBehaviour:
   defaultTimerSettingsSessionDuration: 1500
   defaultTimerSettingsSessionsAmount: 2
   autoSyncIntervalSeconds: 420
-  manualSyncOffsetSeconds: 60
+  manualSyncOffsetSeconds: 180
   cacheTimerSettingsDurationSeconds: 300
   cacheRunHistoryDurationSeconds: 60000
-  runHistoryLimit: 10
+  runHistoryLimit: 8

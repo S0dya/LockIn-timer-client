@@ -139,6 +139,8 @@ Each entry displays:
 * description
 * run consistency
 
+<img src="ReadmeSrc/RunHistory.gif" width="25%"/>
+
 ## Timer Settings
 
 Settings openable in any state of the application

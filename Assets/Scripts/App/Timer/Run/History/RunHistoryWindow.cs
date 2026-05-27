@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using App.Timer.Back.Models;
+using Cysharp.Threading.Tasks;
 using PT.Tools.Debugging;
 using PT.Tools.Windows;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace App.Timer.Run.History
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private float scrollLoadOffset = 0.01f;
         
-        private List<RunHistoryView> _activeRunHistoryViews = new();
+        private readonly List<RunHistoryView> _activeRunHistoryViews = new();
         
         private ObjectPool<RunHistoryView> _runHistoryViewsPool;
 
@@ -32,7 +33,7 @@ namespace App.Timer.Run.History
 
         private float _lastContentHeight;
 
-        private void Awake()
+        public void Init()
         {
             _runHistoryViewsPool = new ObjectPool<RunHistoryView>(
                 () => Instantiate(runHistoryViewPrefab, runHistoryViewsParent),
@@ -61,6 +62,13 @@ namespace App.Timer.Run.History
             }
         }
 
+        protected override async UniTask OnOpen()
+        {
+            await base.OnOpen();
+            
+            scrollRect.verticalNormalizedPosition = 1f;
+        }
+        
         public void ShowRunHistories(List<RunHistoryResponse> runHistories)
         {
             DebugManager.Log(DebugCategory.TimerRun, $"Showing {runHistories.Count} run histories");
@@ -77,8 +85,12 @@ namespace App.Timer.Run.History
                     runHistories[i].Description,
                     runHistories[i].RunStartTime,
                     runHistories[i].RunEndTime));
+
+                runHistoryView.transform.SetAsLastSibling();
             }
 
+            DebugManager.Log(DebugCategory.TimerRun, $"Run histories shown, stopping loading");
+            
             StopLoading();
         }
 

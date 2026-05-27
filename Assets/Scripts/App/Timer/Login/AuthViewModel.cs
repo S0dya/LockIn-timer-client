@@ -114,12 +114,12 @@ namespace App.Timer.Login
         {
             DebugManager.Log(DebugCategory.TimerAuth, "Starting FetchCurrentUser operation");
             
+            using var loadingToken =_requestLoadingManager.AddLoading();
+            
             var result = await _authService.GetCurrentUser(_cts.Token);
 
             if (result.IsSuccess)
             {
-                using var loadingToken =_requestLoadingManager.AddLoading();
-                
                 var newUser = new UserState()
                 {
                     Username = result.Value.Username,

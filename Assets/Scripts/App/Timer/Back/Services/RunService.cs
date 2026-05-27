@@ -4,7 +4,9 @@ using App.Timer.Back.Models;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
+using PT.Tools.Debugging;
 using PT.Tools.Http;
+using UnityEngine;
 using Zenject;
 
 namespace App.Timer.Back.Services
@@ -58,6 +60,8 @@ namespace App.Timer.Back.Services
             
             if (cacheExpired)
             {
+                DebugManager.Log(DebugCategory.TimerRun, $"Cache expired, clearing cache...");
+                
                 _cachedRunHistory.Clear();
             }
             else
@@ -68,12 +72,16 @@ namespace App.Timer.Back.Services
                 {
                     if (_cachedRunHistory.ContainsKey(i)) continue;
 
+                    DebugManager.Log(DebugCategory.TimerRun, $"Cached run history not found for index {i}");
+                    
                     isFullyCached = false;
                     break;
                 }
                 
                 if (isFullyCached)
                 {
+                    DebugManager.Log(DebugCategory.TimerRun, $"Run history fully cached, returning cached data");
+                    
                     var cachedRunHistory = new List<RunHistoryResponse>();
                     for (int i = request.Offset; i < request.Offset + request.Limit; i++) 
                         cachedRunHistory.Add(_cachedRunHistory[i]);
@@ -85,7 +93,7 @@ namespace App.Timer.Back.Services
             var result = await Execute(_api.GetRunHistory(request, cancellationToken), "Failed to get run history");
 
             if (!result.IsSuccess) return result;
-            
+
             for (int i = 0; i < result.Value.Count; i++)
                 _cachedRunHistory[request.Offset + i] = result.Value[i];
             

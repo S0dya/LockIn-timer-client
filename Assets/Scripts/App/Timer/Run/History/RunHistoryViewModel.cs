@@ -30,6 +30,8 @@ namespace App.Timer.Run.History
             _runActionsView.OnOpenHistory += OnOpenHistory;
             _runHistoryWindow.TryLoadMore += OnTryLoadMore;
             _runHistoryWindow.CloseWindow += OnCloseWindow;
+            
+            _runHistoryWindow.Init();
         }
 
         private async void OnOpenHistory()

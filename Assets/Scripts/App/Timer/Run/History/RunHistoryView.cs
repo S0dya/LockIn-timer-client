@@ -43,7 +43,7 @@ namespace App.Timer.Run.History
             float completenessRatio = (float)runHistoryData.CompletedSessions / runHistoryData.PlannedSessionsAmount;
             completenessImage.fillAmount = completenessRatio;
             
-            completenessTextNumber.text = $"{completenessRatio * 100}%";
+            completenessTextNumber.text = $"{completenessRatio * 100f:0}%";
             SetCompletenessStyle(completenessRatio);
             SetRandomIcon();
         }
