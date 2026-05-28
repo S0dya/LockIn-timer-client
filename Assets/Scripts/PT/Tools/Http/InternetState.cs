@@ -1,6 +1,6 @@
 using UniRx;
 
-namespace App.Timer.States
+namespace PT.Tools.Http
 {
     public class InternetState
     {

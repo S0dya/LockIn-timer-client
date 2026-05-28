@@ -1,5 +1,3 @@
-using App.Timer;
-using App.Timer.Back.Config;
 using PT.GameplayAdditional.Progression;
 using PT.Logic.Configs;
 using PT.Tools.Addressables;
@@ -7,6 +5,8 @@ using PT.Tools.Http;
 using PT.Tools.Leaderboard;
 using PT.Tools.Settings.Configs;
 using PT.Tools.Tutorials.Configs;
+using App.Backend.Config;
+using App.Core;
 using UnityEngine;
 using Zenject;
 
