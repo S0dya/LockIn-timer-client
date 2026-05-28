@@ -50,6 +50,8 @@ namespace PT.Tools.Debugging
         TimerRun = 1 << 27,
         TimerSettings = 1 << 28,
         TimerAuth = 1 << 29,
+        
+        Notifications = 1 << 30,
     
         All = ~0
     }

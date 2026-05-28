@@ -24,3 +24,4 @@ MonoBehaviour:
   settingsInfosConfig: {fileID: 11400000, guid: 8242f9e786f6bf64f9e345807481cef6, type: 2}
   apiConfig: {fileID: 11400000, guid: 96663a27764aa124f98d2ee2fc17cd4c, type: 2}
   appConfig: {fileID: 11400000, guid: 55711df467e4a514cb85cabe8e119820, type: 2}
+  notificationsConfig: {fileID: 11400000, guid: 48eb1dd806c3cdf4e90d38c12edbc2f0, type: 2}

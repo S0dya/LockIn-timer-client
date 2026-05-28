@@ -9,6 +9,7 @@ using App.Features.Run.Views;
 using App.Features.Run.Windows;
 using App.Shared.Windows;
 using Cysharp.Threading.Tasks;
+using PT.Logic.Dependency.Signals;
 using PT.Tools.Debugging;
 using PT.Tools.Windows;
 using UniRx;
@@ -30,6 +31,7 @@ namespace App.Features.Run
         [Inject(Id = "App")] private WindowsManager _windowsManager;
         [Inject] private RequestLoadingManager _requestLoadingManager;
         [Inject] private RequestErrorManager _requestErrorManager;
+        [Inject] private SignalBus _signalBus;
         
         private readonly CompositeDisposable _disposables = new();
         private IDisposable _timerDisposable;
@@ -249,6 +251,9 @@ namespace App.Features.Run
                 {
                     _requestErrorManager.ShowError(result.Error);
                 }
+                
+                _signalBus.Fire(new SessionStartedSignal(result.Value.SessionDuration));
+                
                 FetchRun().Forget();
             }
             catch (OperationCanceledException)
@@ -288,6 +293,8 @@ namespace App.Features.Run
                     _requestErrorManager.ShowError($"{result.Error}", false);
                     return;
                 }
+                
+                _signalBus.Fire(new SessionFinishedSignal());
 
                 DebugManager.Log(DebugCategory.TimerRun, "Session finished successfully, showing completion window");
                 _windowsManager.Open<SessionFinishedViewWindow>(new SessionFinishedData(

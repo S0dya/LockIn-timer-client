@@ -1,3 +1,4 @@
+using App.Additional;
 using App.Backend.Api;
 using App.Core.States;
 using App.Shared.Windows;
@@ -8,6 +9,7 @@ using App.Features.Run;
 using App.Features.Run.History;
 using App.Features.Run.Views;
 using App.Features.Run.Windows;
+using App.Shared;
 using App.Shared.Synchronization;
 using PT.Tools.Windows;
 using Zenject;
@@ -41,6 +43,8 @@ namespace App.Core
             Container.BindInterfacesAndSelfTo<RequestLoadingManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<RequestErrorManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<InternetConnectionManager>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<TimerNotificationsService>().AsSingle();
             
             Container.Bind<TimerSettingsViewWindow>().FromComponentInHierarchy().AsSingle();
             Container.Bind<RunActionsView>().FromComponentInHierarchy().AsSingle();

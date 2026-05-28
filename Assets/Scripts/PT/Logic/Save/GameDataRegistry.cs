@@ -19,6 +19,9 @@ namespace PT.Logic.Save
             Register(GameDataKey.SoundOn, () => GameData.SoundOn, v => GameData.SoundOn = (bool)v);
             Register(GameDataKey.VibroOn, () => GameData.VibroOn, v => GameData.VibroOn = (bool)v);
             
+            Register(GameDataKey.NotificationsRequested, () => GameData.NotificationsRequested, v => GameData.NotificationsRequested = (bool)v);
+            Register(GameDataKey.NotificationsOn, () => GameData.NotificationsOn, v => GameData.NotificationsOn = (bool)v);
+            
             Register(GameDataKey.LevelIndex, () => GameData.LevelIndex, v => GameData.LevelIndex = (int)v);
             
             Register(GameDataKey.Gold, () => GameData.Gold, v => GameData.Gold = (int)v);
@@ -28,9 +31,6 @@ namespace PT.Logic.Save
             
             Register(GameDataKey.LeaderboardPlayerName, () => GameData.LeaderboardPlayerName, v => GameData.LeaderboardPlayerName = (string)v);
             Register(GameDataKey.LeaderboardPlayerRank, () => GameData.LeaderboardPlayerRank, v => GameData.LeaderboardPlayerRank = (int)v);
-            
-            Register(GameDataKey.SingersOpened, () => GameData.SingersOpened, v => GameData.SingersOpened = (string)v);
-            Register(GameDataKey.SongsOpened, () => GameData.SongsOpened, v => GameData.SongsOpened = (string)v);
         }
 
         private static void Register(GameDataKey key, Func<object> getter, Action<object> setter)

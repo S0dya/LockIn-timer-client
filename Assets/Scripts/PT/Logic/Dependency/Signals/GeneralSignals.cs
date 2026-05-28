@@ -22,5 +22,11 @@ namespace PT.Logic.Dependency.Signals
     
     public class GameMenuOpenedSignal { }
     public class GameMenuClosedSignal { }
-    
+
+    public class SessionStartedSignal
+    {
+        public int Duration { get; private set; }
+        public SessionStartedSignal(int duration) { Duration = duration; }
+    }
+    public class SessionFinishedSignal { }
 }

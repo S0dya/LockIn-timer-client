@@ -10,15 +10,15 @@ namespace PT.Logic.Save
         
         VibroOn,
         
+        NotificationsRequested,
+        NotificationsOn,
+        
         LevelIndex,
         
         Gold,
         
         LeaderboardPlayerRank,
         LeaderboardPlayerName,
-        
-        SingersOpened,
-        SongsOpened,
     }
     
     public static class GameData
@@ -28,6 +28,9 @@ namespace PT.Logic.Save
         public static int HighestScore { get; internal set; }
         
         public static bool VibroOn { get; internal set; } = true;
+
+        public static bool NotificationsRequested { get; internal set; } = false;
+        public static bool NotificationsOn { get; internal set; } = false;
         
         public static int LevelIndex { get; internal set; }
         
@@ -35,8 +38,5 @@ namespace PT.Logic.Save
         
         public static int LeaderboardPlayerRank { get; internal set; } 
         public static string LeaderboardPlayerName { get; internal set; }
-
-        public static string SingersOpened { get; internal set; } = "0001";
-        public static string SongsOpened { get; internal set; } = "1110";
     }
 }

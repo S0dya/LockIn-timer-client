@@ -7,6 +7,7 @@ using PT.Tools.Settings.Configs;
 using PT.Tools.Tutorials.Configs;
 using App.Backend.Config;
 using App.Core;
+using PT.Tools.Notifications;
 using UnityEngine;
 using Zenject;
 
@@ -28,6 +29,7 @@ namespace PT.Logic.Dependency.ProjectContext
         [SerializeField] private SettingsInfosConfig settingsInfosConfig;
         [SerializeField] private ApiConfig apiConfig;
         [SerializeField] private AppConfig appConfig;
+        [SerializeField] private NotificationsConfig notificationsConfig;
         
         public override void InstallBindings()
         {
@@ -45,6 +47,7 @@ namespace PT.Logic.Dependency.ProjectContext
             
             Container.Bind<ApiConfig>().FromInstance(apiConfig).AsSingle();
             Container.Bind<AppConfig>().FromInstance(appConfig).AsSingle();
+            Container.Bind<NotificationsConfig>().FromInstance(notificationsConfig).AsSingle();
         }
     }
 }
